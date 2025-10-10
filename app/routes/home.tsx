@@ -15,17 +15,64 @@ function Home() {
   const { t } = useTranslation();
   const [javaCopied, setJavaCopied] = useState(false);
   const [bedrockCopied, setBedrockCopied] = useState(false);
-  const [newsItems, setNewsItems] = useState<Array<{ id: string; title: string; date: string; summary: string }>>([]);
+  const [newsItems, setNewsItems] = useState<Array<{ id: string; title: string; description: string; assets?: string[]; createdAt?: number }>>([]);
   const [newsPage, setNewsPage] = useState(1);
   const pageSize = 5;
   const [topJoin, setTopJoin] = useState<Array<{ id: string; name: string; date: string }>>([]);
 
+  function renderFormattedDescription(description: string) {
+    if (!description) return null;
+
+    function renderInline(text: string, keyPrefix: string) {
+      // First handle underline __...__ then bold **...**
+      const underlineParts = text.split(/(__[^_]+__)/g);
+      const underlineNodes = underlineParts.map((part, i) => {
+        if (part.startsWith('__') && part.endsWith('__') && part.length > 4) {
+          const inner = part.slice(2, -2);
+          return <u key={`${keyPrefix}-u-${i}`}>{renderBold(inner, `${keyPrefix}-u-inner-${i}`)}</u>;
+        }
+        return renderBold(part, `${keyPrefix}-plain-${i}`);
+      });
+      return underlineNodes;
+    }
+
+    function renderBold(text: string, keyPrefix: string) {
+      const boldParts = text.split(/(\*\*[^*]+\*\*)/g);
+      return boldParts.map((bp, j) => {
+        if (bp.startsWith('**') && bp.endsWith('**') && bp.length > 4) {
+          return <strong key={`${keyPrefix}-b-${j}`}>{bp.slice(2, -2)}</strong>;
+        }
+        return <span key={`${keyPrefix}-t-${j}`}>{bp}</span>;
+      });
+    }
+
+    const lines = description.split(/\r?\n/);
+    return (
+      <div>
+        {lines.map((line, idx) => {
+          const isBullet = line.trim().startsWith('- ');
+          const content = isBullet ? line.trim().slice(2) : line;
+          if (isBullet) {
+            return (
+              <div key={`l-${idx}`} style={{ display: 'flex', gap: 8, paddingLeft: 12, alignItems: 'flex-start' }}>
+                <span style={{ lineHeight: 1.6 }}>•</span>
+                <span style={{ lineHeight: 1.6 }}>{renderInline(content, `li-${idx}`)}</span>
+              </div>
+            );
+          }
+          return (
+            <div key={`l-${idx}`} style={{ lineHeight: 1.6 }}>{renderInline(content, `ln-${idx}`)}</div>
+          );
+        })}
+      </div>
+    );
+  }
+
   useEffect(() => {
     let isMounted = true;
-    (async () => {
+    async function fetchNews() {
       try {
-        // Try to fetch from backend if available
-        const res = await fetch('/api/news', { credentials: 'include' });
+        const res = await fetch('https://elbasha-backend.vercel.app/api/news', { credentials: 'include' });
         if (res.ok) {
           const data = await res.json();
           if (isMounted && Array.isArray(data)) {
@@ -34,18 +81,9 @@ function Home() {
           }
         }
       } catch {}
-      // Fallback sample data
-      if (isMounted) {
-        setNewsItems([
-          { id: '1', title: 'New Minigame Released', date: '2025-10-01', summary: 'Jump into our latest fast-paced minigame with new maps and kits.' },
-          { id: '2', title: 'Double XP Weekend', date: '2025-09-28', summary: 'Earn double XP across all game modes this weekend. Don\'t miss out!' },
-          { id: '3', title: 'Store Update', date: '2025-09-20', summary: 'Fresh cosmetics and seasonal bundles are now available in the store.' },
-          { id: '4', title: 'Leaderboard Reset', date: '2025-09-15', summary: 'Seasonal leaderboards have been reset. Climb back to the top!' },
-          { id: '5', title: 'Anti-Cheat Improvements', date: '2025-09-10', summary: 'We\'ve rolled out enhanced anti-cheat to keep matches fair.' },
-          { id: '6', title: 'Community Event', date: '2025-09-05', summary: 'Join our build contest and win exclusive in-game rewards.' },
-        ]);
-      }
-    })();
+    }
+    fetchNews();
+    const intervalId = setInterval(() => { fetchNews(); }, 5000);
     (async () => {
       try {
         const res = await fetch('/api/top-join', { credentials: 'include' });
@@ -68,7 +106,7 @@ function Home() {
         ]);
       }
     })();
-    return () => { isMounted = false; };
+    return () => { isMounted = false; clearInterval(intervalId); };
   }, []);
 
   const totalPages = Math.max(1, Math.ceil(newsItems.length / pageSize));
@@ -278,9 +316,20 @@ function Home() {
                   <article key={item.id} className="rounded-xl border border-white/10 bg-white/5 p-4 md:p-5">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
                       <h4 className="text-lg md:text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>{item.title}</h4>
-                      <time className="text-sm opacity-80 font-mono" style={{ color: 'var(--text-secondary)' }}>{item.date}</time>
+                      {item.createdAt ? (
+                        <time className="text-sm opacity-80 font-mono" style={{ color: 'var(--text-secondary)' }}>{new Date(item.createdAt).toLocaleString()}</time>
+                      ) : null}
                     </div>
-                    <p className="mt-2 text-sm md:text-base opacity-90" style={{ color: 'var(--text-secondary)' }}>{item.summary}</p>
+                    <div className="mt-2 text-sm md:text-base opacity-90" style={{ color: 'var(--text-secondary)' }}>
+                      {renderFormattedDescription(item.description)}
+                    </div>
+                    {Array.isArray(item.assets) && item.assets.length > 0 && (
+                      <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-3">
+                        {item.assets.slice(0, 6).map((url, idx) => (
+                          <img key={idx} src={url} alt="news asset" className="w-full h-28 object-cover rounded-lg border border-white/10" />
+                        ))}
+                      </div>
+                    )}
                   </article>
                 ))
               )}
