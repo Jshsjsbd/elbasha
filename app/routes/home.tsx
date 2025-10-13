@@ -390,13 +390,7 @@ function Home() {
                 topJoin.map((p, index) => (
                   <li key={p.id} className="py-3 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-800 flex items-center justify-center">
-                        <div
-    className="absolute w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center"
-    style={{ backgroundColor: 'var(--button-bg)', color: 'var(--bg-primary)' }}
-  >
-    {index + 1}
-  </div>
+                      <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-800 flex items-center justify-center"></div>
                        <img
                         src={`https://mc-heads.net/avatar/${p.name.trim()}/64`}
     alt={p.name}
