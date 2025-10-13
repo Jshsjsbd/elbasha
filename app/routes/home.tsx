@@ -148,7 +148,7 @@ function Home() {
 
     return () => {
       isMounted = false;
-      clearInterval(intervalid);
+      clearInterval(intervalId);
       clearInterval(playersInterval);
     };
   }, []);
