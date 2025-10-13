@@ -1,5 +1,15 @@
-import React, { useEffect, useState } from "react";
+import Header from '../components/Header';
+import Footer from "../components/Footer";
+import "../app.css";
+import React, { useEffect, useRef, useState } from "react";
+import * as THREE from 'three';
+import Chart from 'chart.js/auto';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import { Link } from 'react-router';
+import WelcomeSVG from '../components/welcome-not-css.svg';
+import ParticleBackground from '../components/BackgroundEffects';
+import TextType from '~/components/TypingText';
+import { useTranslation } from "react-i18next";
 
 // Type definitions for API response
 interface PlayerData {
@@ -206,6 +216,9 @@ function Home() {
   }
 
   return (
+    <>
+    {/* <ParticleBackground /> */}
+    <Header type='home' />
     <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
       {/* Hero Section */}
       <div className='relative flex justify-center items-center flex-col'>
@@ -387,7 +400,9 @@ function Home() {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
+    </>
   );
 }
 
