@@ -237,9 +237,18 @@ function Home() {
             className="max-w-[calc(100vw-3px)] mt-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium mb-7 text-center leading-tight tracking-tight"
             style={{ color: "var(--text-primary)" }}
           >
-            <span style={{ color: "var(--text-accent)" }} className='text-shadow-lg'>
-              Mystic Network!
-            </span>
+            <span className="whitespace-normal md:whitespace-nowrap">
+                {/* {t("welcome")} */}
+                <span style={{ display: "inline", color: "var(--text-accent)" }} className='text-shadow-lg'>
+                  <TextType 
+                    text="Mystic Network!"
+                    typingSpeed={65}
+                    pauseDuration={1500}
+                    showCursor={true}
+                    cursorCharacter="|"
+                  />
+                </span>
+              </span>
           </h2>
           <p className="max-w-[calc(100vw-3px)] text-base sm:text-lg md:text-xl md:max-w-2xl mx-auto opacity-90 text-center text-shadow-xl leading-relaxed" style={{ color: "var(--text-secondary)" }}>
             The best minecraft minigames network ever.
@@ -382,18 +391,18 @@ function Home() {
                   <li key={p.id} className="py-3 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
                       <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-800 flex items-center justify-center">
+                        <div
+    className="absolute w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center"
+    style={{ backgroundColor: 'var(--button-bg)', color: 'var(--bg-primary)' }}
+  >
+    {index + 1}
+  </div>
                        <img
                         src={`https://mc-heads.net/avatar/${p.name.trim()}/64`}
     alt={p.name}
     className="w-full h-full object-cover"
     onError={(e) => (e.currentTarget.src = '/default-skin.png')}
   />
-  <div
-    className="absolute -top-1 -right-1 w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center"
-    style={{ backgroundColor: 'var(--button-bg)', color: 'var(--bg-primary)' }}
-  >
-    {index + 1}
-  </div>
 </div>
                       <div className="min-w-0">
                         <div className="truncate font-semibold" style={{ color: 'var(--text-primary)' }}>{p.name}</div>
