@@ -15,9 +15,12 @@ import { useTranslation } from "react-i18next";
 interface PlayerData {
   playerName: string;
   playerUUID: string;
-  playtimeActive: number; // in milliseconds
-  lastSeen: number; // timestamp
-  registered: number; // timestamp
+  playtimeActive: number;
+  extensionValues?: {
+    primaryGroup?: {
+      value: string;
+    };
+  };
 }
 
 interface PlayersTableResponse {
@@ -30,7 +33,7 @@ function Home() {
   const [newsItems, setNewsItems] = useState<Array<{ id: string; title: string; description: string; assets?: string[]; createdAt?: number }>>([]);
   const [newsPage, setNewsPage] = useState(1);
   const pageSize = 5;
-  const [topJoin, setTopJoin] = useState<Array<{ id: string; name: string; playtime: string }>>([]);
+  const [topJoin, setTopJoin] = useState<Array<{ id: string; name: string; playtime: string; rank: string }>>([]);
   const [isLoadingPlayers, setIsLoadingPlayers] = useState(true);
 
   // Format milliseconds to readable time
@@ -117,44 +120,34 @@ function Home() {
         if (res.ok) {
           const data: PlayersTableResponse = await res.json();
           if (isMounted && data.players && Array.isArray(data.players)) {
-            // Sort by playtime (descending) and take top 5
-            const sortedPlayers = [...data.players]
+            const sorted = [...data.players]
               .sort((a, b) => b.playtimeActive - a.playtimeActive)
               .slice(0, 5)
-              .map((player, index) => ({
-                id: player.playerUUID,
-                name: player.playerName,
-                playtime: formatPlaytime(player.playtimeActive)
+              .map((p) => ({
+                id: p.playerUUID,
+                name: p.playerName,
+                playtime: formatPlaytime(p.playtimeActive),
+                rank:
+                  p.extensionValues?.primaryGroup?.value
+                    ?.replace(/_/g, ' ')
+                    ?.replace(/\b\w/g, (c) => c.toUpperCase()) || "Unknown"
               }));
-            
-            setTopJoin(sortedPlayers);
+            setTopJoin(sorted);
           }
         }
-      } catch (error) {
-        console.error('Error fetching players:', error);
-        // Fallback to dummy data if API fails
-        if (isMounted) {
-          setTopJoin([
-            { id: 'tj1', name: 'EnderKnight', playtime: '45h 30m' },
-            { id: 'tj2', name: 'SkyMiner', playtime: '38h 15m' },
-            { id: 'tj3', name: 'RedstoneGuru', playtime: '32h 45m' },
-            { id: 'tj4', name: 'CreeperTamer', playtime: '28h 20m' },
-            { id: 'tj5', name: 'MysticWolf', playtime: '25h 10m' },
-          ]);
-        }
+      } catch (err) {
+        console.error("Error fetching players:", err);
       } finally {
-        if (isMounted) {
-          setIsLoadingPlayers(false);
-        }
+        if (isMounted) setIsLoadingPlayers(false);
       }
     }
-    fetchTopPlayers();
-    // Refresh top players every 5 seconds for live updates
-    const playersInterval = setInterval(() => { fetchTopPlayers(); }, 5000);
 
-    return () => { 
-      isMounted = false; 
-      clearInterval(intervalId);
+    fetchTopPlayers();
+    const playersInterval = setInterval(fetchTopPlayers, 5000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(newsInterval);
       clearInterval(playersInterval);
     };
   }, []);
@@ -400,7 +393,7 @@ function Home() {
     </div>
     <div className="min-w-0">
       <div className="truncate font-semibold" style={{ color: 'var(--text-primary)' }}>{p.name}</div>
-      <div className="text-xs opacity-80 font-mono" style={{ color: 'var(--text-secondary)' }}>{p.playtime}</div>
+      <div className="text-xs opacity-80 font-mono" style={{ color: 'var(--text-secondary)' }}>{p.playtime} • <span style={{ color: 'var(--text-accent)' }}>{p.rank}</span></div>
     </div>
   </div>
   <div className="flex items-center gap-1">
