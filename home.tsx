@@ -1,5 +1,15 @@
-import React, { useEffect, useState } from "react";
+import Header from '../components/Header';
+import Footer from "../components/Footer";
+import "../app.css";
+import React, { useEffect, useRef, useState } from "react";
+import * as THREE from 'three';
+import Chart from 'chart.js/auto';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import { Link } from 'react-router';
+import WelcomeSVG from '../components/welcome-not-css.svg';
+import ParticleBackground from '../components/BackgroundEffects';
+import TextType from '~/components/TypingText';
+import { useTranslation } from "react-i18next";
 
 // Type definitions for API response
 interface PlayerData {
@@ -206,6 +216,9 @@ function Home() {
   }
 
   return (
+    <>
+    {/* <ParticleBackground /> */}
+    <Header type='home' />
     <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
       {/* Hero Section */}
       <div className='relative flex justify-center items-center flex-col'>
@@ -224,9 +237,18 @@ function Home() {
             className="max-w-[calc(100vw-3px)] mt-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium mb-7 text-center leading-tight tracking-tight"
             style={{ color: "var(--text-primary)" }}
           >
-            <span style={{ color: "var(--text-accent)" }} className='text-shadow-lg'>
-              Mystic Network!
-            </span>
+            <span className="whitespace-normal md:whitespace-nowrap">
+                {/* {t("welcome")} */}
+                <span style={{ display: "inline", color: "var(--text-accent)" }} className='text-shadow-lg'>
+                  <TextType 
+                    text="Mystic Network!"
+                    typingSpeed={65}
+                    pauseDuration={1500}
+                    showCursor={true}
+                    cursorCharacter="|"
+                  />
+                </span>
+              </span>
           </h2>
           <p className="max-w-[calc(100vw-3px)] text-base sm:text-lg md:text-xl md:max-w-2xl mx-auto opacity-90 text-center text-shadow-xl leading-relaxed" style={{ color: "var(--text-secondary)" }}>
             The best minecraft minigames network ever.
@@ -387,7 +409,9 @@ function Home() {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
+    </>
   );
 }
 
