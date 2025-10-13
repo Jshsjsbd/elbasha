@@ -397,6 +397,7 @@ function Home() {
     className="w-full h-full object-cover"
     onError={(e) => (e.currentTarget.src = '/default-skin.png')}
   />
+                        </img>
 </div>
                       <div className="min-w-0">
                         <div className="truncate font-semibold" style={{ color: 'var(--text-primary)' }}>{p.name}</div>
