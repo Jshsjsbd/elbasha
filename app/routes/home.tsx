@@ -389,25 +389,24 @@ function Home() {
               ) : (
                 topJoin.map((p, index) => (
                   <li key={p.id} className="py-3 flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-800 flex items-center justify-center"></div>
-                       <img
-                        src={`https://mc-heads.net/avatar/${p.name.trim()}/64`}
-    alt={p.name}
-    className="w-full h-full object-cover"
-    onError={(e) => (e.currentTarget.src = '/default-skin.png')}
-  />
-                        </img>
-</div>
-                      <div className="min-w-0">
-                        <div className="truncate font-semibold" style={{ color: 'var(--text-primary)' }}>{p.name}</div>
-                        <div className="text-xs opacity-80 font-mono" style={{ color: 'var(--text-secondary)' }}>{p.playtime}</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <i className="fas fa-clock text-xs" style={{ color: 'var(--text-accent)', opacity: 0.6 }}></i>
-                    </div>
-                  </li>
+  <div className="flex items-center gap-3 min-w-0">
+    <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-800 flex items-center justify-center">
+      <img
+        src={`https://mc-heads.net/avatar/${p.name.trim()}/64`}
+        alt={p.name}
+        className="w-full h-full object-cover"
+        onError={(e) => (e.currentTarget.src = '/default-skin.png')}
+      />
+    </div>
+    <div className="min-w-0">
+      <div className="truncate font-semibold" style={{ color: 'var(--text-primary)' }}>{p.name}</div>
+      <div className="text-xs opacity-80 font-mono" style={{ color: 'var(--text-secondary)' }}>{p.playtime}</div>
+    </div>
+  </div>
+  <div className="flex items-center gap-1">
+    <i className="fas fa-clock text-xs" style={{ color: 'var(--text-accent)', opacity: 0.6 }}></i>
+  </div>
+</li>
                 ))
               )}
             </ul>
