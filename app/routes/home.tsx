@@ -113,7 +113,7 @@ function Home() {
     async function fetchTopPlayers() {
       try {
         setIsLoadingPlayers(true);
-        const res = await fetch('http://mystic.mc-dns.com:8115/v1/playersTable');
+        const res = await fetch('https://elbasha-backend.vercel.app/api/players');
         if (res.ok) {
           const data: PlayersTableResponse = await res.json();
           if (isMounted && data.players && Array.isArray(data.players)) {
