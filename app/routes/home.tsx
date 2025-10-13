@@ -111,6 +111,7 @@ function Home() {
     }
     fetchNews();
     const intervalId = setInterval(() => { fetchNews(); }, 5000);
+    
 
     // Fetch top players from Plan API
     async function fetchTopPlayers() {
@@ -147,7 +148,7 @@ function Home() {
 
     return () => {
       isMounted = false;
-      clearInterval(newsInterval);
+      clearInterval(intervalid);
       clearInterval(playersInterval);
     };
   }, []);
