@@ -402,7 +402,7 @@ function Home() {
     </div>
     <div className="min-w-0">
       <div className="truncate font-semibold" style={{ color: 'var(--text-primary)' }}>{p.name}</div>
-      <div className="text-xs opacity-80 font-mono" style={{ color: 'var(--text-secondary)' }}>{p.playtime} • <span style={{ backgroundColor: "var(--button-bg)", color: "var(--bg-primary)", padding: "2px", font: "bold"}}>{p.rank}</span></div>
+      <div className="text-xs opacity-80 font-mono" style={{ color: 'var(--text-secondary)' }}>{p.playtime} • <span style={{ backgroundColor: "var(--button-bg)", color: "var(--bg-primary)", padding: "3px", fontWeight: "bold", borderRadius: "20px"}}>{p.rank}</span></div>
     </div>
   </div>
   <div className="flex items-center gap-1">
