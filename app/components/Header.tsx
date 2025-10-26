@@ -160,9 +160,9 @@ function Header(props: HeaderParams) {
                 style={{ boxShadow: '0 10px 15px -3px var(--shadow-color), 0 4px 6px -2px var(--shadow-color-light)' }}
             >
                 <div className="flex items-center" style={{ color: "var(--text-primary)" }}>
-                    <div className="flex items-center h-10 mr-2 absolute left-8 text-center text-xl font-bold">
+                    <div className="flex items-center h-10 mr-2 absolute left-10 text-center text-xl font-bold">
                         <Link to='/' className="flex items-center flex-row">
-                            <img src={mysticNetwork} alt="Mystic Network Logo" className="w-25 h-10 mr-2" />
+                            <img src={mysticNetwork} alt="Mystic Network Logo" className="w-25 h-8 mr-2" />
                         </Link>
                     </div>
                     
@@ -179,7 +179,7 @@ function Header(props: HeaderParams) {
                         </ul>
                     </div>
                     
-                    <div className="absolute top-6 right-2 flex flex-col font-bold block md:hidden" ref={menuRef}>
+                    <div className="absolute top-4 right-2 flex flex-col font-bold block md:hidden" ref={menuRef}>
                         <HamburgerBtn navType={props.type} />
                     </div>
                 </div>
