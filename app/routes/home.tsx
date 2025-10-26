@@ -250,7 +250,7 @@ function Home() {
           <source src="https://r2.guns.lol/c5f9338a-a38f-4419-a55c-711c6e9ecb05.mp4" type="video/mp4" />
         </video>
   <div className="absolute inset-0 bg-black/40" />
-  <div className="relative flex flex-col items-center justify-center pt-12 pb-12 min-h-[45vh] px-4">
+  <div className="relative flex flex-col items-center justify-center pt-12 pb-12 min-h-[50vh] px-4">
           <h2
             className="max-w-[calc(100vw-3px)] text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-medium mb-3 text-center leading-tight tracking-tight"
             style={{ color: "var(--text-primary)" }}

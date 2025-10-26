@@ -156,13 +156,13 @@ function Header(props: HeaderParams) {
     return (
         <div className="flex justify-center items-center sticky top-0 z-1000">
             <div 
-                className="absolute top-0 backdrop-blur-xl flex justify-between items-center h-20 w-full items-center z-1000 custom-styles" 
+                className="absolute top-0 backdrop-blur-xl flex justify-between items-center h-15 w-full items-center z-1000 custom-styles" 
                 style={{ boxShadow: '0 10px 15px -3px var(--shadow-color), 0 4px 6px -2px var(--shadow-color-light)' }}
             >
                 <div className="flex items-center" style={{ color: "var(--text-primary)" }}>
                     <div className="flex items-center h-10 mr-2 absolute left-8 text-center text-xl font-bold">
                         <Link to='/' className="flex items-center flex-row">
-                            <img src={mysticNetwork} alt="Mystic Network Logo" className="w-30 h-10 mr-2" />
+                            <img src={mysticNetwork} alt="Mystic Network Logo" className="w-25 h-5 mr-2" />
                         </Link>
                     </div>
                     
