@@ -233,8 +233,8 @@ function Home() {
       {/* Hero Section */}
       <div className='relative flex justify-center items-center flex-col'>
         {!isVideoLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/90">
-            <div className="w-12 h-12 border-4 border-white/20 border-t-white/80 rounded-full animate-spin"></div>
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-gray-900/80 to-black/90 backdrop-blur-sm">
+            <div className="w-16 h-16 border-4 border-white/10 border-t-white/60 rounded-full animate-spin"></div>
           </div>
         )}
         <video
@@ -250,8 +250,7 @@ function Home() {
           <source src="https://r2.guns.lol/c5f9338a-a38f-4419-a55c-711c6e9ecb05.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/40" />
-        <div className="relative flex flex-col items-center justify-center pt-24 pb-24 min-h-[50vh] px-4" 
-          style={{ opacity: isVideoLoaded ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}>
+        <div className="relative flex flex-col items-center justify-center pt-24 pb-24 min-h-[50vh] px-4">
           <h2
             className="max-w-[calc(100vw-3px)] mt-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium mb-7 text-center leading-tight tracking-tight"
             style={{ color: "var(--text-primary)" }}
