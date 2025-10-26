@@ -31,6 +31,13 @@ function Home() {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [javaCopied, setJavaCopied] = useState(false);
   const [bedrockCopied, setBedrockCopied] = useState(false);
+
+  // Preload video
+  useEffect(() => {
+    const videoPreload = document.createElement('video');
+    videoPreload.src = '/videos/hero.mp4';
+    videoPreload.load();
+  }, []);
   const [newsItems, setNewsItems] = useState<Array<{ id: string; title: string; description: string; assets?: string[]; createdAt?: number }>>([]);
   const [newsPage, setNewsPage] = useState(1);
   const pageSize = 5;
@@ -236,10 +243,11 @@ function Home() {
           muted
           loop
           playsInline
+          preload="auto"
           onLoadedData={() => setIsVideoLoaded(true)}
           style={{ opacity: isVideoLoaded ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}
         >
-          <source src="/videos/hero.mp4" type="video/mp4" />
+          <source src="https://r2.guns.lol/c5f9338a-a38f-4419-a55c-711c6e9ecb05.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative flex flex-col items-center justify-center pt-24 pb-24 min-h-[50vh] px-4" 
