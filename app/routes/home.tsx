@@ -234,7 +234,7 @@ function Home() {
           <source src="/videos/hero.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/40" />
-        <div className="relative flex flex-col items-center justify-center pt-38 pb-44 min-h-[100vh] px-4">
+        <div className="relative flex flex-col items-center justify-center pt-28 pb-32 min-h-[60vh] px-4">
           <h2
             className="max-w-[calc(100vw-3px)] mt-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium mb-7 text-center leading-tight tracking-tight"
             style={{ color: "var(--text-primary)" }}
