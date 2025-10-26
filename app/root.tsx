@@ -38,6 +38,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Mystic Network</title>
+        
+        {/* SEO Meta Tags */}
+        <meta name="description" content="Join Mystic Network - Experience epic adventures, amazing builds, and a friendly community. Play with us today!" />
+        <meta name="keywords" content="minecraft server, minecraft multiplayer, mystic, gaming, minecraft community, minecraft, network, mystic network, ميستك, ميستك نيتورك, نتوورك, minecraft networks" />
+        
+        {/* Open Graph / Discord Embed Meta Tags */}
+        <meta property="og:title" content="Mystic Network - Minecraft Server" />
+        <meta property="og:description" content="Join Mystic Network - Experience epic adventures, amazing builds, and a friendly community. Play with us today!" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://mystic1.vercel.app" />
+        <meta property="og:image" content="/images/server-banner.png" />
+        <meta property="og:site_name" content="Mystic Network" />
+        
+        {/* Discord-specific meta tags */}
+        <meta name="theme-color" content="#d4a35d" />
+        
         <Meta />
         <Links />
       </head>
