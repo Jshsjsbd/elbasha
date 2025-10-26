@@ -249,10 +249,10 @@ function Home() {
         >
           <source src="https://r2.guns.lol/c5f9338a-a38f-4419-a55c-711c6e9ecb05.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-black/40" />
-        <div className="relative flex flex-col items-center justify-center pt-16 pb-16 min-h-[40vh] px-4">
+  <div className="absolute inset-0 bg-black/40" />
+  <div className="relative flex flex-col items-center justify-center pt-12 pb-12 min-h-[35vh] px-4">
           <h2
-            className="max-w-[calc(100vw-3px)] text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium mb-5 text-center leading-tight tracking-tight"
+            className="max-w-[calc(100vw-3px)] text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-medium mb-3 text-center leading-tight tracking-tight"
             style={{ color: "var(--text-primary)" }}
           >
             <span className="whitespace-normal md:whitespace-nowrap">
@@ -268,27 +268,27 @@ function Home() {
                 </span>
               </span>
           </h2>
-          <p className="max-w-[calc(100vw-3px)] text-base sm:text-lg md:text-xl md:max-w-2xl mx-auto opacity-90 text-center text-shadow-xl leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+          <p className="max-w-[calc(100vw-3px)] text-sm sm:text-base md:text-lg md:max-w-2xl mx-auto opacity-90 text-center text-shadow-xl leading-relaxed" style={{ color: "var(--text-secondary)" }}>
             The best minecraft minigames network ever.
           </p>
           <div className="flex flex-col items-center">
-            <div className="mb-3 mt-10 opacity-70 animate-bounce">
-              <i className="fas fa-chevron-down text-3xl" style={{ color: "var(--text-accent)" }}></i>
-            </div>
-            <a
-              href="#join"
-              className="mt-1 px-8 py-4 rounded-full text-lg font-semibold transition transform hover:scale-105 focus:outline-none focus:ring-4"
-              style={{ 
-                backgroundColor: "var(--button-bg)", 
-                color: "var(--bg-primary)",
-                "--tw-ring-color": "var(--accent-color)",
-                boxShadow: "0 20px 25px -5px var(--shadow-color), 0 10px 10px -5px var(--shadow-color-light)"
-              } as React.CSSProperties}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--button-hover)"}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--button-bg)"}
-            >
-              Join Now
-            </a>
+              <div className="mb-1 mt-4 opacity-75 animate-bounce">
+                <i className="fas fa-chevron-down text-2xl" style={{ color: "var(--text-accent)" }}></i>
+              </div>
+              <a
+                href="#join"
+                className="mt-1 px-5 py-2 rounded-full text-sm font-semibold transition transform hover:scale-105 focus:outline-none focus:ring-4"
+                style={{ 
+                  backgroundColor: "var(--button-bg)", 
+                  color: "var(--bg-primary)",
+                  "--tw-ring-color": "var(--accent-color)",
+                  boxShadow: "0 10px 14px -5px var(--shadow-color), 0 6px 6px -5px var(--shadow-color-light)"
+                } as React.CSSProperties}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--button-hover)"}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--button-bg)"}
+              >
+                Join Now
+              </a>
           </div>
         </div>
       </div>
