@@ -28,6 +28,7 @@ interface PlayersTableResponse {
 }
 
 function Home() {
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [javaCopied, setJavaCopied] = useState(false);
   const [bedrockCopied, setBedrockCopied] = useState(false);
   const [newsItems, setNewsItems] = useState<Array<{ id: string; title: string; description: string; assets?: string[]; createdAt?: number }>>([]);
@@ -224,17 +225,25 @@ function Home() {
     <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
       {/* Hero Section */}
       <div className='relative flex justify-center items-center flex-col'>
+        {!isVideoLoaded && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/90">
+            <div className="w-12 h-12 border-4 border-white/20 border-t-white/80 rounded-full animate-spin"></div>
+          </div>
+        )}
         <video
           className="absolute inset-0 w-full h-full object-cover"
           autoPlay
           muted
           loop
           playsInline
+          onLoadedData={() => setIsVideoLoaded(true)}
+          style={{ opacity: isVideoLoaded ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}
         >
           <source src="/videos/hero.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/40" />
-        <div className="relative flex flex-col items-center justify-center pt-28 pb-32 min-h-[60vh] px-4">
+        <div className="relative flex flex-col items-center justify-center pt-24 pb-24 min-h-[50vh] px-4" 
+          style={{ opacity: isVideoLoaded ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}>
           <h2
             className="max-w-[calc(100vw-3px)] mt-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium mb-7 text-center leading-tight tracking-tight"
             style={{ color: "var(--text-primary)" }}
