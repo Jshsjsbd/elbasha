@@ -250,9 +250,9 @@ function Home() {
           <source src="https://r2.guns.lol/c5f9338a-a38f-4419-a55c-711c6e9ecb05.mp4" type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/40" />
-        <div className="relative flex flex-col items-center justify-center pt-24 pb-24 min-h-[50vh] px-4">
+        <div className="relative flex flex-col items-center justify-center pt-16 pb-16 min-h-[40vh] px-4">
           <h2
-            className="max-w-[calc(100vw-3px)] mt-10 text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-medium mb-7 text-center leading-tight tracking-tight"
+            className="max-w-[calc(100vw-3px)] text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium mb-5 text-center leading-tight tracking-tight"
             style={{ color: "var(--text-primary)" }}
           >
             <span className="whitespace-normal md:whitespace-nowrap">
@@ -260,7 +260,7 @@ function Home() {
                 <span style={{ display: "inline", color: "var(--text-accent)" }} className='text-shadow-lg'>
                   <TextType 
                     text="Mystic Network!"
-                    typingSpeed={65}
+                    typingSpeed={55}
                     pauseDuration={1500}
                     showCursor={true}
                     cursorCharacter="|"
