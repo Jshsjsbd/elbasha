@@ -433,7 +433,7 @@ function Home() {
   </section>
   */}
   {/* Footer (commented out) */}
-  {/* <Footer /> */}
+      <Footer />
     </div>
     </>
   );
