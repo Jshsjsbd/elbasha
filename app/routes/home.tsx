@@ -230,8 +230,8 @@ function Home() {
     {/* <ParticleBackground /> */}
     <Header type='home' />
     <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
-  {/* Hero Section */}
-  <div className='relative flex justify-center items-center flex-col h-screen w-full'>
+      {/* Hero Section */}
+      <div className='relative flex justify-center items-center flex-col h-screen w-full'>
         {!isVideoLoaded && (
           <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-gray-900/80 to-black/90 backdrop-blur-sm">
             <div className="w-16 h-16 border-4 border-white/10 border-t-white/60 rounded-full animate-spin"></div>
@@ -293,8 +293,7 @@ function Home() {
         </div>
       </div>
 
-      {/* Server Info Section (commented out) */}
-      {/**
+      {/* Server Info Section */}
       <section id="join" className="w-full flex justify-center items-center py-14 px-4">
         <div className="w-full max-w-4xl rounded-2xl border border-white/10 bg-black/20 backdrop-blur-md shadow-2xl p-6 md:p-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
@@ -347,14 +346,12 @@ function Home() {
           </div>
         </div>
       </section>
-      */}
 
       {/* News + Top Join Section (commented out) */}
-      {/**
+  {/*
       <section className="w-full flex justify-center items-center py-14 px-4">
         <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* News Card */}
-          <div className="md:col-span-2 rounded-2xl border border-white/10 bg-black/20 backdrop-blur-md shadow-2xl p-6 md:p-8">
+            <div className="md:col-span-2 rounded-2xl border border-white/10 bg-black/20 backdrop-blur-md shadow-2xl p-6 md:p-8">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>News</h3>
               {newsItems.length > 0 && (
@@ -394,7 +391,7 @@ function Home() {
             <PaginationTabs position="bottom" />
           </div>
 
-          {/* Top Join Card */}
+          
           <div className="rounded-2xl border border-white/10 bg-black/20 backdrop-blur-md shadow-2xl p-6 md:p-8">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>Top Players</h3>
@@ -433,10 +430,10 @@ function Home() {
             </ul>
           </div>
         </div>
-      </section>
-      */}
+  </section>
+  */}
   {/* Footer (commented out) */}
-  {/** <Footer /> */}
+  {/* <Footer /> */}
     </div>
     </>
   );
