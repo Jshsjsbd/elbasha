@@ -280,7 +280,7 @@ function Home() {
                 className="mt-1 px-5 py-2 rounded-full text-sm font-semibold transition transform hover:scale-105 focus:outline-none focus:ring-4"
                 style={{ 
                   backgroundColor: "var(--button-bg)", 
-                  color: "var(--text-primary)",
+                  color: "var(--bg-primary)",
                   "--tw-ring-color": "var(--accent-color)",
                   boxShadow: "0 10px 14px -5px var(--shadow-color), 0 6px 6px -5px var(--shadow-color-light)"
                 } as React.CSSProperties}
@@ -311,7 +311,7 @@ function Home() {
                   className="px-3 py-2 rounded-lg text-sm font-semibold transition transform hover:scale-105 focus:outline-none focus:ring-2"
                   style={{
                     backgroundColor: "var(--button-bg)",
-                    color: "var(--text-primary)",
+                    color: "var(--bg-primary)",
                     "--tw-ring-color": "var(--accent-color)"
                   } as React.CSSProperties}
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--button-hover)"}
@@ -332,7 +332,7 @@ function Home() {
                   className="px-3 py-2 rounded-lg text-sm font-semibold transition transform hover:scale-105 focus:outline-none focus:ring-2"
                   style={{
                     backgroundColor: "var(--button-bg)",
-                    color: "var(--text-primary)",
+                    color: "var(--bg-primary)",
                     "--tw-ring-color": "var(--accent-color)"
                   } as React.CSSProperties}
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--button-hover)"}

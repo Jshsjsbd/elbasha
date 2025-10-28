@@ -19,7 +19,7 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '' }) => {
   const applyTheme = (theme: string) => {
     const root = document.documentElement;
     if (theme === 'dark') {
-      root.style.setProperty('--bg-primary', '#ff9a00');
+      root.style.setProperty('--bg-primary', '#242436');
       root.style.setProperty('--text-primary', '#f5f5dc');
       root.style.setProperty('--accent-color', '#d4a35d');
       root.style.setProperty('--border-color', 'rgba(212, 163, 93, 0.2)');
