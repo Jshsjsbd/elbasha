@@ -14,10 +14,6 @@ export default [
   // API Routes
   route("api/auth/discord-callback", "api/auth.ts"),
   route("api/server/status", "api/server-status.ts"),
-  route("api/applications/types", "api/applications.ts"),
-  route("api/applications/:type/form", "api/applications.ts"),
-  route("api/applications/submit", "api/applications.ts"),
-  route("api/applications/:id", "api/applications.ts"),
-  route("api/applications/:id/review", "api/applications.ts"),
+  route("api/applications", "api/applications.ts"),
 ] satisfies RouteConfig;
 
