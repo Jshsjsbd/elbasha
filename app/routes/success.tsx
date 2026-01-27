@@ -1,71 +1,47 @@
-import { useEffect, useState } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
-import { CheckCircle, Loader } from 'lucide-react';
-export default function Success() {
-  const [searchParams] = useSearchParams();
-  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
-  const sessionId = searchParams.get('session_id');
-  useEffect(() => {
-    if (sessionId) {
-      // Optionally verify the purchase with your backend
-      setTimeout(() => {
-        setStatus('success');
-      }, 1500);
-    } else {
-      setStatus('error');
-    }
-  }, [sessionId]);
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import { Link } from "react-router";
+
+export default function SuccessPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-blur-sm rounded-xl p-8 border border-gray-700 text-center">
-        {status === 'loading' && (
-          <>
-            <Loader className="mx-auto mb-4 animate-spin text-blue-400" size={64} />
-            <h2 className="text-2xl font-bold mb-2">Processing...</h2>
-            <p className="text-gray-400">Verifying your purchase</p>
-          </>
-        )}
-        {status === 'success' && (
-          <>
-            <CheckCircle className="mx-auto mb-4 text-green-400" size={64} />
-            <h2 className="text-3xl font-bold mb-4">Purchase Successful!</h2>
-            <p className="text-gray-300 mb-6">
-              Your items will be delivered to your Minecraft account within a few moments.
-              <br />
-              <span className="text-green-400 font-semibold">Thank you for your purchase!</span>
+    <div className="w-full bg-gradient-to-b from-slate-950 via-orange-950 to-slate-950 text-white min-h-screen flex flex-col">
+      <Header type="store" />
+
+      <div className="flex-grow flex items-center justify-center pt-32">
+        <div className="text-center max-w-2xl px-4">
+          <div className="text-7xl mb-6">✅</div>
+          <h1 className="text-5xl font-bold mb-4 text-green-400">
+            Payment Successful!
+          </h1>
+          <p className="text-xl text-orange-200 mb-8">
+            Thank you for your purchase. Your items have been delivered to your account.
+          </p>
+
+          <div className="bg-slate-800 rounded-lg p-6 border border-orange-500 mb-8">
+            <p className="text-slate-300 mb-4">
+              You should receive a confirmation email shortly. If you have any issues,
+              please contact our support team on Discord.
             </p>
-            <div className="space-y-3">
-              <Link
-                to="/store"
-                className="block w-full bg-gradient-to-r from-green-500 to-blue-500 py-3 rounded-lg font-semibold hover:shadow-lg hover:shadow-green-500/50 transition-all"
-              >
-                Back to Store
-              </Link>
-              <Link
-                to="/"
-                className="block w-full bg-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-600 transition-all"
-              >
-                Go to Home
-              </Link>
-            </div>
-          </>
-        )}
-        {status === 'error' && (
-          <>
-            <div className="text-red-400 text-5xl mb-4">⚠️</div>
-            <h2 className="text-2xl font-bold mb-2">Something went wrong</h2>
-            <p className="text-gray-400 mb-6">
-              We couldn't verify your purchase. Please contact support if you were charged.
-            </p>
+          </div>
+
+          <div className="flex gap-4 justify-center flex-wrap">
             <Link
-              to="/store"
-              className="block w-full bg-gradient-to-r from-green-500 to-blue-500 py-3 rounded-lg font-semibold hover:shadow-lg hover:shadow-green-500/50 transition-all"
+              to="/"
+              className="px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 rounded-lg font-bold text-lg transition-all transform hover:scale-105"
             >
-              Back to Store
+              Back to Home
             </Link>
-          </>
-        )}
+            <a
+              href="https://discord.gg/mysticnetwork"
+              className="px-8 py-4 bg-[#5865F2] hover:bg-[#4752C4] rounded-lg font-bold text-lg transition-all transform hover:scale-105"
+            >
+              Join Discord
+            </a>
+          </div>
+        </div>
       </div>
+
+      <Footer />
     </div>
   );
 }

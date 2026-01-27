@@ -1,440 +1,282 @@
-import Header from '../components/Header';
+import { json, type Route } from "react-router";
+import { useState, useEffect } from "react";
+import Header from "../components/Header";
 import Footer from "../components/Footer";
-import "../app.css";
-import React, { useEffect, useRef, useState } from "react";
-import * as THREE from 'three';
-import Chart from 'chart.js/auto';
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import { Link } from 'react-router';
-import WelcomeSVG from '../components/welcome-not-css.svg';
-import ParticleBackground from '../components/BackgroundEffects';
-import TextType from '~/components/TypingText';
-import { useTranslation } from "react-i18next";
 
-// Type definitions for API response
-interface PlayerData {
-  playerName: string;
-  playerUUID: string;
-  playtimeActive: number;
-  extensionValues?: {
-    primaryGroup?: {
-      value: string;
-    };
+export async function loader() {
+  try {
+    const response = await fetch("/api/server/status", {
+      headers: {
+        "Cache-Control": "no-cache",
+      },
+    });
+
+    if (!response.ok) {
+      return json({
+        serverStatus: {
+          online: false,
+          players: { online: 0, max: 0 },
+          version: { name: "Unknown", protocol: 0 },
+          description: "Server status unavailable",
+        },
+        topPlayers: [],
+      });
+    }
+
+    const data = await response.json();
+    return json(data);
+  } catch (error) {
+    console.error("Failed to load server status:", error);
+    return json({
+      serverStatus: {
+        online: false,
+        players: { online: 0, max: 0 },
+        version: { name: "Unknown", protocol: 0 },
+        description: "Server status unavailable",
+      },
+      topPlayers: [],
+    });
+  }
+}
+
+interface ServerStatus {
+  online: boolean;
+  players: { online: number; max: number };
+  version: { name: string; protocol: number };
+  description: string;
+}
+
+interface Player {
+  username: string;
+  uuid: string;
+  playtime: number;
+  lastSeen: string;
+  level?: number;
+}
+
+export default function Home({ loaderData }: Route.ComponentProps) {
+  const { serverStatus, topPlayers } = loaderData as {
+    serverStatus: ServerStatus;
+    topPlayers: Player[];
   };
-}
-
-interface PlayersTableResponse {
-  players: PlayerData[];
-}
-
-function Home() {
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const [javaCopied, setJavaCopied] = useState(false);
-  const [bedrockCopied, setBedrockCopied] = useState(false);
-
-  // Preload video
-  useEffect(() => {
-    const videoPreload = document.createElement('video');
-    videoPreload.src = '/videos/hero.mp4';
-    videoPreload.load();
-  }, []);
-  const [newsItems, setNewsItems] = useState<Array<{ id: string; title: string; description: string; assets?: string[]; createdAt?: number }>>([]);
-  const [newsPage, setNewsPage] = useState(1);
-  const pageSize = 5;
-  const [topJoin, setTopJoin] = useState<Array<{ id: string; name: string; playtime: string; rank: string }>>([]);
-  const [isLoadingPlayers, setIsLoadingPlayers] = useState(true);
-
-  // Format milliseconds to readable time
-  function formatPlaytime(ms: number): string {
-    const hours = Math.floor(ms / (1000 * 60 * 60));
-    const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
-    
-    if (hours > 0) {
-      return `${hours}h ${minutes}m`;
-    }
-    return `${minutes}m`;
-  }
-
-  function renderFormattedDescription(description: string) {
-    if (!description) return null;
-
-    function renderInline(text: string, keyPrefix: string) {
-      const underlineParts = text.split(/(__[^_]+__)/g);
-      const underlineNodes = underlineParts.map((part, i) => {
-        if (part.startsWith('__') && part.endsWith('__') && part.length > 4) {
-          const inner = part.slice(2, -2);
-          return <u key={`${keyPrefix}-u-${i}`}>{renderBold(inner, `${keyPrefix}-u-inner-${i}`)}</u>;
-        }
-        return renderBold(part, `${keyPrefix}-plain-${i}`);
-      });
-      return underlineNodes;
-    }
-
-    function renderBold(text: string, keyPrefix: string) {
-      const boldParts = text.split(/(\*\*[^*]+\*\*)/g);
-      return boldParts.map((bp, j) => {
-        if (bp.startsWith('**') && bp.endsWith('**') && bp.length > 4) {
-          return <strong key={`${keyPrefix}-b-${j}`}>{bp.slice(2, -2)}</strong>;
-        }
-        return <span key={`${keyPrefix}-t-${j}`}>{bp}</span>;
-      });
-    }
-
-    const lines = description.split(/\r?\n/);
-    return (
-      <div>
-        {lines.map((line, idx) => {
-          const isBullet = line.trim().startsWith('- ');
-          const content = isBullet ? line.trim().slice(2) : line;
-          if (isBullet) {
-            return (
-              <div key={`l-${idx}`} style={{ display: 'flex', gap: 8, paddingLeft: 12, alignItems: 'flex-start' }}>
-                <span style={{ lineHeight: 1.6 }}>•</span>
-                <span style={{ lineHeight: 1.6 }}>{renderInline(content, `li-${idx}`)}</span>
-              </div>
-            );
-          }
-          return (
-            <div key={`l-${idx}`} style={{ lineHeight: 1.6 }}>{renderInline(content, `ln-${idx}`)}</div>
-          );
-        })}
-      </div>
-    );
-  }
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    let isMounted = true;
-
-    // Fetch news
-    async function fetchNews() {
-      try {
-        const res = await fetch('https://elbasha-backend.vercel.app/api/news', { credentials: 'include' });
-        if (res.ok) {
-          const data = await res.json();
-          if (isMounted && Array.isArray(data)) {
-            setNewsItems(data);
-          }
-        }
-      } catch {}
+    const userSession = localStorage.getItem("userSession");
+    if (userSession) {
+      setUser(JSON.parse(userSession));
     }
-    fetchNews();
-    const intervalId = setInterval(() => { fetchNews(); }, 5000);
-    
-
-    // Fetch top players from Plan API
-    async function fetchTopPlayers() {
-      try {
-        setIsLoadingPlayers(true);
-        const res = await fetch('https://elbasha-backend.vercel.app/api/players');
-        if (res.ok) {
-          const data: PlayersTableResponse = await res.json();
-          if (isMounted && data.players && Array.isArray(data.players)) {
-            const sorted = [...data.players]
-              .sort((a, b) => b.playtimeActive - a.playtimeActive)
-              .slice(0, 5)
-              .map((p) => ({
-                id: p.playerUUID,
-                name: p.playerName,
-                playtime: formatPlaytime(p.playtimeActive),
-                rank:
-  (
-    p.extensionValues?.primaryGroup?.value
-      ?.replace(/_/g, ' ')
-      ?.replace(/\b\w/g, (c) => c.toUpperCase())
-  ) === "Default"
-    ? "Member"
-    : (
-        p.extensionValues?.primaryGroup?.value
-          ?.replace(/_/g, ' ')
-          ?.replace(/\b\w/g, (c) => c.toUpperCase()) || "Unknown"
-      )
-              }));
-            setTopJoin(sorted);
-          }
-        }
-      } catch (err) {
-        console.error("Error fetching players:", err);
-      } finally {
-        if (isMounted) setIsLoadingPlayers(false);
-      }
-    }
-
-    fetchTopPlayers();
-    const playersInterval = setInterval(fetchTopPlayers, 5000);
-
-    return () => {
-      isMounted = false;
-      clearInterval(intervalId);
-      clearInterval(playersInterval);
-    };
   }, []);
-
-  const totalPages = Math.max(1, Math.ceil(newsItems.length / pageSize));
-  const currentPage = Math.min(newsPage, totalPages);
-  const pageStart = (currentPage - 1) * pageSize;
-  const visibleNews = newsItems.slice(pageStart, pageStart + pageSize);
-
-  function PaginationTabs({ position }: { position: 'top' | 'bottom' }) {
-    if (totalPages <= 1) return null;
-    return (
-      <div className={`flex flex-wrap items-center justify-center gap-2 ${position === 'top' ? 'mb-6' : 'mt-6'}`}>
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-          <button
-            key={`page-${position}-${p}`}
-            aria-label={`Go to page ${p}`}
-            className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition focus:outline-none focus:ring-2 ${
-              p === currentPage ? 'scale-105' : 'hover:scale-105'
-            }`}
-            style={{
-              backgroundColor: p === currentPage ? 'var(--button-hover)' : 'var(--button-bg)',
-              color: 'var(--bg-primary)',
-              '--tw-ring-color': 'var(--accent-color)'
-            } as React.CSSProperties}
-            onMouseEnter={(e) => { if (p !== currentPage) e.currentTarget.style.backgroundColor = 'var(--button-hover)'; }}
-            onMouseLeave={(e) => { if (p !== currentPage) e.currentTarget.style.backgroundColor = 'var(--button-bg)'; }}
-            onClick={() => setNewsPage(p)}
-          >
-            {p}
-          </button>
-        ))}
-      </div>
-    );
-  }
-
-  async function handleCopy(text: string, setCopied: React.Dispatch<React.SetStateAction<boolean>>) {
-    try {
-      if (navigator.clipboard && (window as any).isSecureContext) {
-        await navigator.clipboard.writeText(text);
-      } else {
-        const textarea = document.createElement('textarea');
-        textarea.value = text;
-        textarea.setAttribute('readonly', '');
-        textarea.style.position = 'fixed';
-        textarea.style.left = '-9999px';
-        document.body.appendChild(textarea);
-        textarea.focus();
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-      }
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1200);
-    } catch {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1200);
-    }
-  }
 
   return (
-    <>
-    {/* <ParticleBackground /> */}
-    <Header type='home' />
-    <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
+    <div className="w-full bg-gradient-to-b from-slate-950 via-orange-950 to-slate-950 text-white">
+      <Header type="home" />
+
       {/* Hero Section */}
-      <div className='relative flex justify-center items-center flex-col'>
-        {!isVideoLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-gray-900/80 to-black/90 backdrop-blur-sm">
-            <div className="w-16 h-16 border-4 border-white/10 border-t-white/60 rounded-full animate-spin"></div>
-          </div>
-        )}
-        <video
-          className="absolute inset-0 w-full h-full object-cover"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          onLoadedData={() => setIsVideoLoaded(true)}
-          style={{ opacity: isVideoLoaded ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}
-        >
-          <source src="https://r2.guns.lol/c5f9338a-a38f-4419-a55c-711c6e9ecb05.mp4" type="video/mp4" />
-        </video>
-  <div className="absolute inset-0 bg-black/40" />
-  <div className="relative flex flex-col items-center justify-center pt-12 pb-12 min-h-[50vh] px-4">
-          <h2
-            className="max-w-[calc(100vw-3px)] text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-medium mb-3 text-center leading-tight tracking-tight"
-            style={{ color: "var(--text-primary)" }}
-          >
-            <span className="whitespace-normal md:whitespace-nowrap">
-                {/* {t("welcome")} */}
-                <span style={{ display: "inline", color: "var(--text-accent)" }} className='text-shadow-lg'>
-                  <TextType 
-                    text="Mystic Network!"
-                    typingSpeed={55}
-                    pauseDuration={1500}
-                    showCursor={true}
-                    cursorCharacter="|"
-                  />
-                </span>
-              </span>
-          </h2>
-          <p className="max-w-[calc(100vw-3px)] text-sm sm:text-base md:text-lg md:max-w-2xl mx-auto opacity-90 text-center text-shadow-xl leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-            The best minecraft minigames network ever.
+      <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-slate-950 via-orange-950 to-slate-950 relative overflow-hidden pt-20">
+        {/* Background effects */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 right-20 w-96 h-96 bg-orange-500 rounded-full mix-blend-screen filter blur-3xl opacity-20 animate-pulse" />
+          <div className="absolute bottom-20 left-20 w-96 h-96 bg-orange-600 rounded-full mix-blend-screen filter blur-3xl opacity-20 animate-pulse" />
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 text-center px-4">
+          <h1 className="text-7xl font-bold mb-6 bg-gradient-to-r from-orange-300 via-orange-400 to-orange-600 bg-clip-text text-transparent">
+            ⛏️ MYSTIC NETWORK
+          </h1>
+          <p className="text-2xl text-orange-200 mb-8 max-w-2xl mx-auto">
+            The Ultimate Minecraft Experience Awaits
           </p>
-          <div className="flex flex-col items-center">
-              <div className="mb-1 mt-4 opacity-75 animate-bounce">
-                <i className="fas fa-chevron-down text-2xl" style={{ color: "var(--text-accent)" }}></i>
+
+          <div className="flex gap-4 justify-center mb-12 flex-wrap">
+            {user ? (
+              <>
+                <a
+                  href="/applications"
+                  className="px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 rounded-lg font-bold text-lg transition-all transform hover:scale-105 shadow-lg"
+                >
+                  🎮 View Applications
+                </a>
+                <a
+                  href="/store"
+                  className="px-8 py-4 bg-slate-800 hover:bg-slate-700 border-2 border-orange-500 rounded-lg font-bold text-lg transition-all transform hover:scale-105 shadow-lg"
+                >
+                  🛍️ Store
+                </a>
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => {
+                    const clientId = import.meta.env.VITE_DISCORD_CLIENT_ID;
+                    
+                    if (!clientId || clientId === "YOUR_DISCORD_CLIENT_ID") {
+                        alert("Discord login is not configured. Please contact the server administrator.");
+                        return;
+                    }
+
+                    const redirectUri = encodeURIComponent(
+                      `${window.location.origin}/auth/discord/callback`
+                    );
+                    const scope = encodeURIComponent("identify email guilds");
+                    window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=${scope}`;
+                  }}
+                  className="px-8 py-4 bg-[#5865F2] hover:bg-[#4752C4] rounded-lg font-bold text-lg transition-all transform hover:scale-105 shadow-lg flex items-center gap-2 justify-center"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.317 4.3671C18.7873 3.54588 17.147 2.98468 15.418 2.7649C15.4121 2.76383 15.4063 2.76274 15.3995 2.76164C15.1558 2.71569 14.9118 2.80219 14.8848 3.02501C14.6547 5.1625 14.3871 7.0951 13.9054 8.8559 13.2202 10.3281C11.7383 10.175 10.2854 10.175 8.84328 10.3281C8.15797 8.8559 7.6762 7.0951 7.44608 5.1625C7.41906 4.80561 7.04952 4.57055 6.68538 4.66309C5.30988 5.00238 3.80746 5.4082 2.25214 6.15625C2.08625 6.2473 1.96402 6.41141 1.94631 6.60547C0.704692 12.6851 1.7035 18.0711 5.18328 20.7257C5.32945 20.8404 5.51589 20.8959 5.69832 20.8783C7.13896 20.7712 8.54795 20.4441 9.86245 19.9265C10.0701 19.8451 10.2077 19.6788 10.2423 19.4878C10.5589 17.8035 10.8034 15.9363 10.8034 14.0227C10.8034 13.4743 11.2502 13.0274 11.7986 13.0274C12.3469 13.0274 12.7938 13.4743 12.7938 14.0227C12.7938 15.9363 13.0383 17.8035 13.3549 19.4878C13.3895 19.6788 13.527 19.8451 13.7347 19.9265C15.0492 20.4441 16.4582 20.7712 17.8989 20.8783C18.0813 20.8959 18.2677 20.8404 18.4139 20.7257C21.8936 18.0711 22.9925 12.6851 21.7509 6.60547C21.7332 6.41141 21.611 6.2473 21.4451 6.15625Z"/>
+                  </svg>
+                  Login with Discord
+                </button>
+                <a
+                  href="/store"
+                  className="px-8 py-4 bg-slate-800 hover:bg-slate-700 border-2 border-orange-500 rounded-lg font-bold text-lg transition-all transform hover:scale-105 shadow-lg"
+                >
+                  🛍️ Store
+                </a>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Server Status Section */}
+      <section className="py-20 bg-slate-900">
+        <div className="container mx-auto px-4">
+          <h2 className="text-4xl font-bold text-center mb-12 text-orange-400">
+            🖥️ Server Status
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Online Status */}
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-6 border border-orange-500 shadow-lg">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold text-white">Status</h3>
+                <div
+                  className={`w-4 h-4 rounded-full ${
+                    serverStatus.online
+                      ? "bg-green-500 animate-pulse"
+                      : "bg-red-500"
+                  }`}
+                />
               </div>
-              <a
-                href="#join"
-                className="mt-1 px-5 py-2 rounded-full text-sm font-semibold transition transform hover:scale-105 focus:outline-none focus:ring-4"
-                style={{ 
-                  backgroundColor: "var(--button-bg)", 
-                  color: "var(--bg-primary)",
-                  "--tw-ring-color": "var(--accent-color)",
-                  boxShadow: "0 10px 14px -5px var(--shadow-color), 0 6px 6px -5px var(--shadow-color-light)"
-                } as React.CSSProperties}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--button-hover)"}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--button-bg)"}
+              <p className="text-3xl font-bold text-orange-400">
+                {serverStatus.online ? "🟢 Online" : "🔴 Offline"}
+              </p>
+            </div>
+
+            {/* Player Count */}
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-6 border border-orange-500 shadow-lg">
+              <h3 className="text-lg font-bold text-white mb-4">Players</h3>
+              <p className="text-3xl font-bold text-orange-400">
+                {serverStatus.players.online}/{serverStatus.players.max}
+              </p>
+              <p className="text-slate-400 mt-2">Online now</p>
+            </div>
+
+            {/* Version */}
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-6 border border-orange-500 shadow-lg">
+              <h3 className="text-lg font-bold text-white mb-4">Version</h3>
+              <p className="text-3xl font-bold text-orange-400">
+                {serverStatus.version.name}
+              </p>
+            </div>
+
+            {/* IP Address */}
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-lg p-6 border border-orange-500 shadow-lg">
+              <h3 className="text-lg font-bold text-white mb-4">IP Address</h3>
+              <p className="text-2xl font-bold text-orange-400 break-all">
+                store.mystic-mc.net
+              </p>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText("store.mystic-mc.net");
+                  alert("Copied to clipboard!");
+                }}
+                className="mt-4 w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 rounded transition-colors"
               >
-                Join Now
-              </a>
-          </div>
-        </div>
-      </div>
-
-      {/* Server Info Section */}
-      <section id="join" className="w-full flex justify-center items-center py-14 px-4">
-        <div className="w-full max-w-4xl rounded-2xl border border-white/10 bg-black/20 backdrop-blur-md shadow-2xl p-6 md:p-8">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div className="flex-1">
-              <h3 className="text-2xl font-semibold mb-2" style={{ color: "var(--text-primary)" }}>Join Mystic Network</h3>
-              <p className="opacity-90" style={{ color: "var(--text-secondary)" }}>Connect using Java or Bedrock. See details below and click to copy.</p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="flex flex-col items-start sm:items-center sm:flex-row gap-2 sm:gap-3 bg-white/5 rounded-xl px-4 py-3 border border-white/10">
-                <div>
-                  <span className="text-sm uppercase tracking-wide opacity-80" style={{ color: "var(--text-secondary)" }}>Java</span>
-                  <div className="font-mono text-lg" style={{ color: "var(--text-primary)" }}>mystic.mc-dns.com</div>
-                </div>
-                <button
-                  className="px-3 py-2 rounded-lg text-sm font-semibold transition transform hover:scale-105 focus:outline-none focus:ring-2"
-                  style={{
-                    backgroundColor: "var(--button-bg)",
-                    color: "var(--bg-primary)",
-                    "--tw-ring-color": "var(--accent-color)"
-                  } as React.CSSProperties}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--button-hover)"}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--button-bg)"}
-                  onClick={() => handleCopy("mystic.mc-dns.com", setJavaCopied)}
-                >
-                  {javaCopied ? "Copied!" : "Copy"}
-                </button>
-              </div>
-
-              <div className="flex flex-col items-start sm:items-center sm:flex-row gap-2 sm:gap-3 bg-white/5 rounded-xl px-4 py-3 border border-white/10">
-                <div>
-                  <span className="text-sm uppercase tracking-wide opacity-80" style={{ color: "var(--text-secondary)" }}>Bedrock</span>
-                  <div className="font-mono text-lg" style={{ color: "var(--text-primary)" }}>mystic.mc-dns.com</div>
-                  <div className="font-mono text-xs opacity-80" style={{ color: "var(--text-secondary)" }}>Port: 25597</div>
-                </div>
-                <button
-                  className="px-3 py-2 rounded-lg text-sm font-semibold transition transform hover:scale-105 focus:outline-none focus:ring-2"
-                  style={{
-                    backgroundColor: "var(--button-bg)",
-                    color: "var(--bg-primary)",
-                    "--tw-ring-color": "var(--accent-color)"
-                  } as React.CSSProperties}
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "var(--button-hover)"}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "var(--button-bg)"}
-                  onClick={() => handleCopy("mystic.mc-dns.com:25597", setBedrockCopied)}
-                >
-                  {bedrockCopied ? "Copied!" : "Copy"}
-                </button>
-              </div>
+                Copy IP
+              </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* News + Top Join Section */}
-      <section className="w-full flex justify-center items-center py-14 px-4">
-        <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* News Card */}
-          <div className="md:col-span-2 rounded-2xl border border-white/10 bg-black/20 backdrop-blur-md shadow-2xl p-6 md:p-8">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>News</h3>
-              {newsItems.length > 0 && (
-                <span className="text-sm opacity-80" style={{ color: 'var(--text-secondary)' }}>
-                  {newsItems.length} update{newsItems.length === 1 ? '' : 's'}
-                </span>
-              )}
-            </div>
+      {/* Top Players Section */}
+      <section className="py-20 bg-gradient-to-b from-slate-900 to-slate-950">
+        <div className="container mx-auto px-4">
+          <h2 className="text-4xl font-bold text-center mb-12 text-orange-400">
+            🏆 Top Players by Playtime
+          </h2>
 
-            <div className="space-y-4">
-              {visibleNews.length === 0 ? (
-                <div className="text-center opacity-80" style={{ color: 'var(--text-secondary)' }}>No news yet.</div>
-              ) : (
-                visibleNews.map((item) => (
-                  <article key={item.id} className="rounded-xl border border-white/10 bg-white/5 p-4 md:p-5">
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                      <h4 className="text-lg md:text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>{item.title}</h4>
-                      {item.createdAt ? (
-                        <time className="text-sm opacity-80 font-mono" style={{ color: 'var(--text-secondary)' }}>{new Date(item.createdAt).toLocaleString()}</time>
-                      ) : null}
-                    </div>
-                    <div className="mt-2 text-sm md:text-base opacity-90" style={{ color: 'var(--text-secondary)' }}>
-                      {renderFormattedDescription(item.description)}
-                    </div>
-                    {Array.isArray(item.assets) && item.assets.length > 0 && (
-                      <div className="mt-3 grid grid-cols-2 md:grid-cols-3 gap-3">
-                        {item.assets.slice(0, 6).map((url, idx) => (
-                          <img key={idx} src={url} alt="news asset" className="w-full h-28 object-cover rounded-lg border border-white/10" />
-                        ))}
+          <div className="max-w-4xl mx-auto">
+            {topPlayers.length > 0 ? (
+              <div className="space-y-4">
+                {topPlayers.map((player, index) => (
+                  <div
+                    key={player.uuid}
+                    className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-lg p-6 border border-orange-500 hover:shadow-lg transition-all duration-300 transform hover:scale-102"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="text-3xl font-bold text-orange-400 min-w-12">
+                          #{index + 1}
+                        </div>
+                        <div className="flex-grow">
+                          <h3 className="text-xl font-bold text-white">
+                            {player.username}
+                          </h3>
+                          <p className="text-slate-400 text-sm">
+                            Last seen: {new Date(player.lastSeen).toLocaleDateString()}
+                          </p>
+                        </div>
                       </div>
-                    )}
-                  </article>
-                ))
-              )}
-            </div>
-
-            <PaginationTabs position="bottom" />
-          </div>
-
-          {/* Top Join Card */}
-          <div className="rounded-2xl border border-white/10 bg-black/20 backdrop-blur-md shadow-2xl p-6 md:p-8">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>Top Players</h3>
-              {isLoadingPlayers && (
-                <div className="w-4 h-4 border-2 border-white/20 border-t-white/80 rounded-full animate-spin"></div>
-              )}
-            </div>
-            <ul className="divide-y divide-white/10">
-              {topJoin.length === 0 ? (
-                <li className="py-3 text-sm opacity-80" style={{ color: 'var(--text-secondary)' }}>
-                  {isLoadingPlayers ? 'Loading...' : 'No players yet.'}
-                </li>
-              ) : (
-                topJoin.map((p, index) => (
-                  <li key={p.id} className="py-3 flex items-center justify-between gap-3">
-  <div className="flex items-center gap-3 min-w-0">
-    <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-800 flex items-center justify-center">
-      <img
-        src={`https://mc-heads.net/avatar/${p.name.trim()}/64`}
-        alt={p.name}
-        className="w-full h-full object-cover"
-        onError={(e) => (e.currentTarget.src = '/default-skin.png')}
-      />
-    </div>
-    <div className="min-w-0">
-      <div className="truncate font-semibold" style={{ color: 'var(--text-primary)' }}>{p.name}</div>
-      <div className="text-xs opacity-80 font-mono" style={{ color: 'var(--text-secondary)' }}>{p.playtime} • <span style={{ backgroundColor: "var(--button-bg)", color: "var(--bg-primary)", padding: "3px", fontWeight: "bold", borderRadius: "20px"}}>{p.rank}</span></div>
-    </div>
-  </div>
-  <div className="flex items-center gap-1">
-    <i className="fas fa-clock text-xs" style={{ color: 'var(--text-accent)', opacity: 0.6 }}></i>
-  </div>
-</li>
-                ))
-              )}
-            </ul>
+                      <div className="text-right">
+                        <p className="text-2xl font-bold text-orange-400">
+                          {Math.floor(player.playtime)}h
+                        </p>
+                        <p className="text-slate-400 text-sm">playtime</p>
+                        {player.level && (
+                          <p className="text-orange-300 text-sm mt-2">
+                            Level {player.level}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="bg-slate-800 rounded-lg p-12 text-center border border-orange-500">
+                <p className="text-slate-300 text-lg">
+                  No player data available yet
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </section>
+
+      {/* Call to Action */}
+      <section className="py-20 bg-slate-900">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-4xl font-bold mb-6 text-white">
+            Join Our Community
+          </h2>
+          <p className="text-xl text-orange-200 mb-8">
+            Become part of the Mystic Network and enjoy an amazing Minecraft experience
+          </p>
+          <a
+            href="/applications"
+            className="inline-block px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 rounded-lg font-bold text-lg transition-all transform hover:scale-105 shadow-lg"
+          >
+            🎯 Apply Now
+          </a>
+        </div>
+      </section>
+
       <Footer />
     </div>
-    </>
   );
 }
-
-export default Home;

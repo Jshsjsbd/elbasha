@@ -5,14 +5,19 @@ export default [
   route("store", "routes/store.tsx"),
   route("success", "routes/success.tsx"),
   route("cancel", "routes/cancel.tsx"),
-  // route("dashboard", "routes/dashboard.tsx"),
-  // route("level/:level", "routes/level.$level.tsx"),
-  // route("leaderboard", "routes/scoreboard.tsx"),
-  // route("profile", "routes/profile.tsx"),
-  // route("signup", "routes/signup.tsx"),
-  // route("login", "routes/login.tsx"),
-  // route("reset-password", "routes/resetpassword.tsx"),
-  // route("email-verify", "routes/verifyemail.tsx"),
-  route("noturbusiness1", "routes/noturbusiness1.tsx")
-  // route("noturbusiness2", "routes/noturbusiness2.tsx")
+  route("applications", "routes/applications.tsx"),
+  route("applications/:type", "routes/applications.$type.tsx"),
+  route("auth/discord/callback", "routes/auth.discord.callback.tsx"),
+  route("profile", "routes/profile.tsx"),
+  route("noturbusiness1", "routes/noturbusiness1.tsx"),
+  
+  // API Routes
+  route("api/auth/discord-callback", "api/auth.ts"),
+  route("api/server/status", "api/server-status.ts"),
+  route("api/applications/types", "api/applications.ts"),
+  route("api/applications/:type/form", "api/applications.ts"),
+  route("api/applications/submit", "api/applications.ts"),
+  route("api/applications/:id", "api/applications.ts"),
+  route("api/applications/:id/review", "api/applications.ts"),
 ] satisfies RouteConfig;
+
