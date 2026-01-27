@@ -9,7 +9,6 @@ export default [
   route("applications/:type", "routes/applications.$type.tsx"),
   route("auth/discord/callback", "routes/auth.discord.callback.tsx"),
   route("profile", "routes/profile.tsx"),
-  route("noturbusiness1", "routes/noturbusiness1.tsx"),
   
   // API Routes
   route("api/auth/discord-callback", "api/auth.ts"),
