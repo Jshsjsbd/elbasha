@@ -73,6 +73,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       <Header type="home" />
 
       {/* Hero Section */}
+<<<<<<< HEAD
       <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-slate-950 via-orange-950 to-slate-950 relative overflow-hidden pt-20">
         {/* Background effects */}
         <div className="absolute inset-0 overflow-hidden">
@@ -87,6 +88,47 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           </h1>
           <p className="text-2xl text-orange-200 mb-8 max-w-2xl mx-auto">
             The Ultimate Minecraft Experience Awaits
+=======
+      <div className='relative flex justify-center items-center flex-col h-screen w-full'>
+        {!isVideoLoaded && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-gray-900/80 to-black/90 backdrop-blur-sm">
+            <div className="w-16 h-16 border-4 border-white/10 border-t-white/60 rounded-full animate-spin"></div>
+          </div>
+        )}
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          onLoadedData={() => setIsVideoLoaded(true)}
+          style={{ opacity: isVideoLoaded ? 1 : 0, transition: 'opacity 0.5s ease-in-out' }}
+        >
+          <source src="https://r2.guns.lol/c5f9338a-a38f-4419-a55c-711c6e9ecb05.mp4" type="video/mp4" />
+        </video>
+  <div className="absolute inset-0 bg-black/40" />
+  <div className="relative flex flex-col items-center justify-center h-full px-4">
+          <h2
+            className="max-w-[calc(100vw-3px)] text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-medium mb-3 text-center leading-tight tracking-tight"
+            style={{ color: "var(--text-primary)" }}
+          >
+            <span className="whitespace-normal md:whitespace-nowrap">
+                {/* {t("welcome")} */}
+                <span style={{ display: "inline", color: "var(--text-accent)" }} className='text-shadow-lg'>
+                  <TextType 
+                    text="Mystic Network!"
+                    typingSpeed={55}
+                    pauseDuration={1500}
+                    showCursor={true}
+                    cursorCharacter="|"
+                  />
+                </span>
+              </span>
+          </h2>
+          <p className="max-w-[calc(100vw-3px)] text-sm sm:text-base md:text-lg md:max-w-2xl mx-auto opacity-90 text-center text-shadow-xl leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+            The best minecraft minigames network ever.
+>>>>>>> c695bad5a3ff22575608745755836efe2b809260
           </p>
 
           <div className="flex gap-4 justify-center mb-12 flex-wrap">
@@ -203,12 +245,28 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         </div>
       </section>
 
+<<<<<<< HEAD
       {/* Top Players Section */}
       <section className="py-20 bg-gradient-to-b from-slate-900 to-slate-950">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-12 text-orange-400">
             🏆 Top Players by Playtime
           </h2>
+=======
+      {/* News + Top Join Section (commented out) */}
+  {/*
+      <section className="w-full flex justify-center items-center py-14 px-4">
+        <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="md:col-span-2 rounded-2xl border border-white/10 bg-black/20 backdrop-blur-md shadow-2xl p-6 md:p-8">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>News</h3>
+              {newsItems.length > 0 && (
+                <span className="text-sm opacity-80" style={{ color: 'var(--text-secondary)' }}>
+                  {newsItems.length} update{newsItems.length === 1 ? '' : 's'}
+                </span>
+              )}
+            </div>
+>>>>>>> c695bad5a3ff22575608745755836efe2b809260
 
           <div className="max-w-4xl mx-auto">
             {topPlayers.length > 0 ? (
@@ -232,6 +290,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                           </p>
                         </div>
                       </div>
+<<<<<<< HEAD
                       <div className="text-right">
                         <p className="text-2xl font-bold text-orange-400">
                           {Math.floor(player.playtime)}h
@@ -276,6 +335,59 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         </div>
       </section>
 
+=======
+                    )}
+                  </article>
+                ))
+              )}
+            </div>
+
+            <PaginationTabs position="bottom" />
+          </div>
+
+          
+          <div className="rounded-2xl border border-white/10 bg-black/20 backdrop-blur-md shadow-2xl p-6 md:p-8">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>Top Players</h3>
+              {isLoadingPlayers && (
+                <div className="w-4 h-4 border-2 border-white/20 border-t-white/80 rounded-full animate-spin"></div>
+              )}
+            </div>
+            <ul className="divide-y divide-white/10">
+              {topJoin.length === 0 ? (
+                <li className="py-3 text-sm opacity-80" style={{ color: 'var(--text-secondary)' }}>
+                  {isLoadingPlayers ? 'Loading...' : 'No players yet.'}
+                </li>
+              ) : (
+                topJoin.map((p, index) => (
+                  <li key={p.id} className="py-3 flex items-center justify-between gap-3">
+  <div className="flex items-center gap-3 min-w-0">
+    <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-800 flex items-center justify-center">
+      <img
+        src={`https://mc-heads.net/avatar/${p.name.trim()}/64`}
+        alt={p.name}
+        className="w-full h-full object-cover"
+        onError={(e) => (e.currentTarget.src = '/default-skin.png')}
+      />
+    </div>
+    <div className="min-w-0">
+      <div className="truncate font-semibold" style={{ color: 'var(--text-primary)' }}>{p.name}</div>
+      <div className="text-xs opacity-80 font-mono" style={{ color: 'var(--text-secondary)' }}>{p.playtime} • <span style={{ backgroundColor: "var(--button-bg)", color: "var(--bg-primary)", padding: "3px", fontWeight: "bold", borderRadius: "20px"}}>{p.rank}</span></div>
+    </div>
+  </div>
+  <div className="flex items-center gap-1">
+    <i className="fas fa-clock text-xs" style={{ color: 'var(--text-accent)', opacity: 0.6 }}></i>
+  </div>
+</li>
+                ))
+              )}
+            </ul>
+          </div>
+        </div>
+  </section>
+  */}
+  {/* Footer (commented out) */}
+>>>>>>> c695bad5a3ff22575608745755836efe2b809260
       <Footer />
     </div>
   );
