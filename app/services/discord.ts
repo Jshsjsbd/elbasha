@@ -35,8 +35,8 @@ export interface SessionUser {
  * Get Discord OAuth2 authorization URL
  */
 export function getDiscordAuthorizationUrl(): string {
-  const clientId = process.env.DISCORD_CLIENT_ID;
-  const redirectUri = process.env.DISCORD_REDIRECT_URI;
+  const clientId = process.env.DISCORD_CLIENT_ID || "";
+  const redirectUri = process.env.DISCORD_REDIRECT_URI || "";
   const scope = "identify email guilds";
 
   return `${DISCORD_API_BASE}/oauth2/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=${encodeURIComponent(scope)}`;

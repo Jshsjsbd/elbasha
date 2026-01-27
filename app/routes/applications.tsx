@@ -1,4 +1,5 @@
-import { json, type Route } from "react-router";
+import type { Route } from "react-router";
+import { json } from "react-router";
 import { useState, useEffect } from "react";
 import { APPLICATION_TYPES } from "../services/applications";
 

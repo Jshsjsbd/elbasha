@@ -39,12 +39,9 @@ export default async function handler(
     );
 
     if (!inGuild) {
-      return json(
-        {
-          error: "You must be a member of our Discord server to access this",
-        },
-        { status: 403 }
-      );
+      return res.status(403).json({
+        error: "You must be a member of our Discord server to access this",
+      });
     }
 
     // Create session token

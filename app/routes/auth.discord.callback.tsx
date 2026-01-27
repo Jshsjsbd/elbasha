@@ -1,4 +1,5 @@
-import { json, redirect, type Route } from "react-router";
+import type { Route } from "react-router";
+import { json, redirect } from "react-router";
 import { getDiscordAuthorizationUrl } from "../services/discord";
 
 export async function loader({ request }: Route.LoaderArgs) {

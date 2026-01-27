@@ -1,4 +1,4 @@
-import { json, type RequestHandler } from "react-router";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import {
   APPLICATION_TYPES,
   getApplicationQuestions,
@@ -11,33 +11,28 @@ import { v4 as uuidv4 } from "uuid";
 // In-memory storage for applications (replace with Firebase/DB)
 const applications = new Map();
 
-/**
- * GET /api/applications/types
- * Get all available application types
- */
-export const getApplicationTypes: RequestHandler = async () => {
-  return json(APPLICATION_TYPES, { status: 200 });
-};
+export default async function handler(
+  req: VercelRequest,
+  res: VercelResponse
+) {
+  const { method, query, body } = req;
+  const path = (query.path as string) || "";
 
-/**
- * GET /api/applications/:type/form
- * Get application form for specific type
- */
-export const getApplicationForm: RequestHandler = async ({
-  params,
-}) => {
   try {
-    const { type } = params;
-
-    if (!type) {
-      return json({ error: "Application type is required" }, { status: 400 });
+    // GET /api/applications?path=types
+    if (method === "GET" && path === "types") {
+      return res.status(200).json(APPLICATION_TYPES);
     }
 
-    const appType = APPLICATION_TYPES.find((t) => t.id === type);
+    // GET /api/applications?path=form&type=<type>
+    if (method === "GET" && path === "form") {
+      const type = query.type as string;
 
-    if (!appType) {
-      return json(
-        { error: "Application type not found" },
+      if (!type) {
+        return res.status(400).json({ error: "Application type is required" });
+      }
+
+      const appType = APPLICATION_TYPES.find((t) => t.id === type);
         { status: 404 }
       );
     }
