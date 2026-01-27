@@ -232,7 +232,6 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                           </p>
                         </div>
                       </div>
-<<<<<<< HEAD
                       <div className="text-right">
                         <p className="text-2xl font-bold text-orange-400">
                           {Math.floor(player.playtime)}h
@@ -277,14 +276,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         </div>
       </section>
 
-=======
-                    )}
-                  </article>
-                ))
-              )}
-            </div>
+      <Footer />
+    </div>
+  );
+}
 
-            <PaginationTabs position="bottom" />
           </div>
 
           
