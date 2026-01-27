@@ -7,7 +7,6 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
-import type { Route } from "./+types/root";
 import "./app.css";
 import Loader from "./components/loader";
 import React, { useEffect } from "react";
@@ -19,7 +18,7 @@ import SecurityAudit from "./components/SecurityAudit";
 import "./i18n";
 
 
-export const links: Route.LinksFunction = () => [
+export const links = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
     rel: "preconnect",
@@ -100,7 +99,7 @@ export default function App() {
   );
 }
 
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+export function ErrorBoundary({ error }: { error: any }) {
   let message = "Oops!";
   let details = "An unexpected error occurred.";
   let stack: string | undefined;

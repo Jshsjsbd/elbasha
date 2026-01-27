@@ -1,7 +1,6 @@
 import { Link } from "react-router";
 import React, { useEffect, useRef, useState } from "react";
 import HamburgerBtn from "./MobileNav";
-import mysticNetwork from "../assets/mysticNetwork.png";
 import { useTranslation } from "react-i18next";
 
 type HeaderParams = {
@@ -189,14 +188,13 @@ function Header(props: HeaderParams) {
                 <div className="flex items-center" style={{ color: "var(--text-primary)" }}>
                     <div className="flex items-center h-10 mr-2 absolute left-10 text-center text-xl font-bold">
                         <Link to='/' className="flex items-center flex-row">
-                            <img src={mysticNetwork} alt="Mystic Network Logo" className="w-25 h-8 mr-2" />
+                            <span className="text-lg font-bold">Mystic Network</span>
                         </Link>
                     </div>
                     
                     <div className="absolute right-6 font-bold hidden md:block">
                         <ul className="flex gap-5 items-center">
-                            {renderNavItems()}
-                            
+                            {renderNavItems()} 
                             <hr 
                                 style={{ backgroundColor: "var(--text-accent)" }} 
                                 className={`text-white bg-white w-[30px] rotate-90 relative ${user ? 'top-5' : 'top-3'} -ml-2 -mr-2 h-[2px] opacity-90`}

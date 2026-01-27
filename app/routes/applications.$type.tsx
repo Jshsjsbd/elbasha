@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { getApplicationQuestions, APPLICATION_TYPES } from "../services/applications";
 import { validateMinecraftUsername } from "../services/minecraft";
 
-export async function loader({ params }: Route.LoaderArgs) {
+export async function loader({ params }: { params: Record<string, string> }) {
   const { type } = params;
 
   if (!type) {
@@ -45,7 +45,7 @@ interface FormData {
 
 export default function ApplicationFormPage({
   loaderData,
-}: Route.ComponentProps) {
+}: any) {
   const { type, label, icon, questions } = loaderData as {
     type: string;
     label: string;

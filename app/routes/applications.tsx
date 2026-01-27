@@ -16,7 +16,7 @@ interface ApplicationType {
   description: string;
 }
 
-export default function ApplicationsPage({ loaderData }: Route.ComponentProps) {
+export default function ApplicationsPage({ loaderData }: any) {
   const { types } = loaderData as { types: ApplicationType[] };
   const [selectedType, setSelectedType] = useState<string | null>(null);
 

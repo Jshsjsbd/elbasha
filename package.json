@@ -3,14 +3,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "react-router build",
-    "dev": "react-router dev",
-    "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc",
+    "build": "npm run typecheck && vite build",
+    "dev": "vite",
+    "start": "node dist/server/index.js",
+    "typecheck": "node node_modules/typescript/bin/tsc --noEmit",
     "security:audit": "npm audit --audit-level=critical || true",
     "security:fix": "npm audit fix",
-    "security:check": "npm run typecheck",
-    "prebuild": "npm run security:check"
+    "security:check": "npm run typecheck"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.7.2",

@@ -6,8 +6,6 @@ import { onAuthStateChanged, signOut} from "firebase/auth";
 import type { User } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
-import mysticNetwork from "../assets/mysticNetwork.png";
-
 type NavigationContextType = {
     isVisible: boolean;
     toggleVisibility: () => void;

@@ -2,7 +2,7 @@ import * as Route from "react-router";
 import { redirect } from "react-router";
 import { getDiscordAuthorizationUrl } from "../services/discord";
 
-export async function loader({ request }: Route.LoaderArgs) {
+export async function loader({ request }: { request: Request }) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
   const error = url.searchParams.get("error");

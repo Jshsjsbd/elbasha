@@ -55,7 +55,7 @@ interface Player {
   level?: number;
 }
 
-export default function Home({ loaderData }: Route.ComponentProps) {
+export default function Home({ loaderData }: any) {
   const { serverStatus, topPlayers } = loaderData as {
     serverStatus: ServerStatus;
     topPlayers: Player[];

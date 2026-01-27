@@ -93,13 +93,15 @@ export default async function handler(
       try {
         const result = await sendApplicationEmbed({
           id,
-          type,
+          userId: discordId,
           discordId,
-          discordUsername,
+          username: discordUsername,
           avatarUrl,
           minecraftUsername,
-          minecraftUuid: validation.uuid,
+          applicationType: type,
           answers,
+          submittedAt: new Date().toISOString(),
+          status: "pending",
         });
         messageId = result || undefined;
       } catch (botError) {
@@ -110,6 +112,7 @@ export default async function handler(
       // Store application
       const application = {
         id,
+        type,
         discordId,
         discordUsername,
         avatarUrl,
