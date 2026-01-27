@@ -1,11 +1,7 @@
 import {
   isRouteErrorResponse,
   Link,
-  Links,
-  Meta,
   Outlet,
-  Scripts,
-  ScrollRestoration,
 } from "react-router";
 import "./app.css";
 import Loader from "./components/loader";
@@ -16,55 +12,6 @@ import ThemeToggle from "./components/ThemeToggle";
 import SecurityMiddleware from "./components/SecurityMiddleware";
 import SecurityAudit from "./components/SecurityAudit";
 import "./i18n";
-
-
-export const links = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
-  },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
-  },
-];
-
-export function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Mystic Network</title>
-        
-        {/* SEO Meta Tags */}
-        <meta name="description" content="Join Mystic Network - Experience epic adventures, amazing builds, and a friendly community. Play with us today!" />
-        <meta name="keywords" content="minecraft server, minecraft multiplayer, mystic, gaming, minecraft community, minecraft, network, mystic network, ميستك, ميستك نيتورك, نتوورك, minecraft networks" />
-        
-        {/* Open Graph / Discord Embed Meta Tags */}
-        <meta property="og:title" content="Mystic Network - Minecraft Server" />
-        <meta property="og:description" content="Join Mystic Network - Experience epic adventures, amazing builds, and a friendly community. Play with us today!" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://mystic1.vercel.app" />
-        <meta property="og:image" content="/images/server-banner.png" />
-        <meta property="og:site_name" content="Mystic Network" />
-        
-        {/* Discord-specific meta tags */}
-        <meta name="theme-color" content="#d4a35d" />
-        
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
-      </body>
-    </html>
-  );
-}
 
 export default function App() {
   const location = useLocation();
