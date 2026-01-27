@@ -1,7 +1,6 @@
 import {
   isRouteErrorResponse,
   Link,
-  Outlet,
 } from "react-router";
 import "./app.css";
 import Loader from "./components/loader";
@@ -11,6 +10,7 @@ import { NavigationProvider } from "./components/MobileNav";
 import ThemeToggle from "./components/ThemeToggle";
 import SecurityMiddleware from "./components/SecurityMiddleware";
 import SecurityAudit from "./components/SecurityAudit";
+import AppRoutes from "./AppRoutes";
 import "./i18n";
 
 export default function App() {
@@ -39,11 +39,7 @@ export default function App() {
     <SecurityMiddleware>
       <NavigationProvider>
         {showLoader && <Loader />}
-        {!showLoader && (
-          <>
-            <Outlet />
-          </>
-        )}
+        {!showLoader && <AppRoutes />}
         <ThemeToggle className="z-1000000"/>
       </NavigationProvider>
     </SecurityMiddleware>
