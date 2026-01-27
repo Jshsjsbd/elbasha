@@ -1,13 +1,6 @@
 import * as Route from "react-router";
-import { json } from "../utils/response";
 import { useState, useEffect } from "react";
 import { APPLICATION_TYPES } from "../services/applications";
-
-export async function loader() {
-  return json({
-    types: APPLICATION_TYPES,
-  });
-}
 
 interface ApplicationType {
   id: string;
@@ -17,7 +10,7 @@ interface ApplicationType {
 }
 
 export default function ApplicationsPage({ loaderData }: any) {
-  const { types } = loaderData as { types: ApplicationType[] };
+  const types = APPLICATION_TYPES;
   const [selectedType, setSelectedType] = useState<string | null>(null);
 
   return (

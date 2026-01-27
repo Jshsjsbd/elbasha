@@ -1,44 +1,7 @@
 import * as Route from "react-router";
-import { json } from "../utils/response";
 import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-
-export async function loader() {
-  try {
-    const response = await fetch("/api/server/status", {
-      headers: {
-        "Cache-Control": "no-cache",
-      },
-    });
-
-    if (!response.ok) {
-      return json({
-        serverStatus: {
-          online: false,
-          players: { online: 0, max: 0 },
-          version: { name: "Unknown", protocol: 0 },
-          description: "Server status unavailable",
-        },
-        topPlayers: [],
-      });
-    }
-
-    const data = await response.json();
-    return json(data);
-  } catch (error) {
-    console.error("Failed to load server status:", error);
-    return json({
-      serverStatus: {
-        online: false,
-        players: { online: 0, max: 0 },
-        version: { name: "Unknown", protocol: 0 },
-        description: "Server status unavailable",
-      },
-      topPlayers: [],
-    });
-  }
-}
 
 interface ServerStatus {
   online: boolean;
@@ -56,11 +19,25 @@ interface Player {
 }
 
 export default function Home({ loaderData }: any) {
-  const { serverStatus, topPlayers } = loaderData as {
-    serverStatus: ServerStatus;
-    topPlayers: Player[];
-  };
+  const [serverStatus, setServerStatus] = useState<ServerStatus>({
+    online: false,
+    players: { online: 0, max: 0 },
+    version: { name: "Unknown", protocol: 0 },
+    description: "Loading...",
+  });
+  const [topPlayers, setTopPlayers] = useState<Player[]>([]);
   const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    // Fetch server status
+    fetch("/api/server/status")
+      .then((res) => res.json())
+      .then((data) => {
+        setServerStatus(data.status);
+        setTopPlayers(data.top_players || []);
+      })
+      .catch((err) => console.error("Failed to load server status:", err));
+  }, []);
 
   useEffect(() => {
     const userSession = localStorage.getItem("userSession");

@@ -1,59 +1,47 @@
 import * as Route from "react-router";
-import { redirect } from "react-router";
-import { getDiscordAuthorizationUrl } from "../services/discord";
+import { useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router";
 
-export async function loader({ request }: { request: Request }) {
-  const url = new URL(request.url);
-  const code = url.searchParams.get("code");
-  const error = url.searchParams.get("error");
+export default function DiscordCallbackPage() {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
-  if (error) {
-    return redirect("/?error=" + encodeURIComponent(error));
-  }
+  useEffect(() => {
+    const code = searchParams.get("code");
+    const error = searchParams.get("error");
 
-  if (!code) {
-    return redirect("/?error=no_code");
-  }
-
-  // Call the auth API
-  try {
-    const response = await fetch(
-      new URL("/api/auth/discord-callback", request.url).href,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ code }),
-      }
-    );
-
-    if (!response.ok) {
-      const data = await response.json();
-      return redirect("/?error=" + encodeURIComponent(data.error));
+    if (error) {
+      navigate("/?error=" + encodeURIComponent(error));
+      return;
     }
 
-    const data = await response.json();
+    if (!code) {
+      navigate("/?error=no_code");
+      return;
+    }
 
-    // Redirect to home with token in session
-    return redirect("/", {
+    // Call the auth API
+    fetch("/api/auth/discord-callback", {
+      method: "POST",
       headers: {
-        "Set-Cookie": `session=${data.token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`,
+        "Content-Type": "application/json",
       },
-    });
-  } catch (error) {
-    console.error("Auth callback error:", error);
-    return redirect("/?error=auth_failed");
-  }
-}
+      body: JSON.stringify({ code }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          navigate("/?error=" + encodeURIComponent(data.error));
+        } else if (data.token) {
+          localStorage.setItem("userSession", JSON.stringify(data));
+          navigate("/");
+        }
+      })
+      .catch((err) => {
+        console.error("Auth error:", err);
+        navigate("/?error=auth_failed");
+      });
+  }, [searchParams, navigate]);
 
-export default function AuthCallback() {
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold mb-4">Authenticating...</h1>
-        <p className="text-gray-600">Please wait while we authenticate you.</p>
-      </div>
-    </div>
-  );
+  return <div>Processing Discord login...</div>;
 }

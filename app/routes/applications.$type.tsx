@@ -1,33 +1,9 @@
 import * as Route from "react-router";
-import { redirect } from "react-router";
+import { useParams } from "react-router";
 import { json } from "../utils/response";
 import { useState, useEffect } from "react";
 import { getApplicationQuestions, APPLICATION_TYPES } from "../services/applications";
 import { validateMinecraftUsername } from "../services/minecraft";
-
-export async function loader({ params }: { params: Record<string, string> }) {
-  const { type } = params;
-
-  if (!type) {
-    return redirect("/applications");
-  }
-
-  const appType = APPLICATION_TYPES.find((t) => t.id === type);
-
-  if (!appType) {
-    return redirect("/applications");
-  }
-
-  const questions = getApplicationQuestions(type);
-
-  return json({
-    type: appType.id,
-    label: appType.label,
-    description: appType.description,
-    icon: appType.icon,
-    questions,
-  });
-}
 
 interface Question {
   id: string;
@@ -46,12 +22,16 @@ interface FormData {
 export default function ApplicationFormPage({
   loaderData,
 }: any) {
-  const { type, label, icon, questions } = loaderData as {
-    type: string;
-    label: string;
-    icon: string;
-    questions: Question[];
-  };
+  const params = useParams<{ type: string }>();
+  const type = params.type;
+  
+  if (!type) return <div>Application type not found</div>;
+  
+  const appType = APPLICATION_TYPES.find((t) => t.id === type);
+  if (!appType) return <div>Application type not found</div>;
+  
+  const questions = getApplicationQuestions(type);
+  const { label, icon } = appType;
 
   const [formData, setFormData] = useState<FormData>({ minecraftUsername: "" });
   const [loading, setLoading] = useState(false);

@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "npm run typecheck && vite build",
+    "build": "npm run typecheck && node node_modules/vite/bin/vite.js build",
     "dev": "vite",
     "start": "node dist/server/index.js",
     "typecheck": "node node_modules/typescript/bin/tsc --noEmit",
