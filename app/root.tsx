@@ -39,7 +39,11 @@ export default function App() {
     <SecurityMiddleware>
       <NavigationProvider>
         {showLoader && <Loader />}
-        {!showLoader && <Outlet />}
+        {!showLoader && (
+          <>
+            <Outlet />
+          </>
+        )}
         <ThemeToggle className="z-1000000"/>
       </NavigationProvider>
     </SecurityMiddleware>
