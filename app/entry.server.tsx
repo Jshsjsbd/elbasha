@@ -1,2 +1,29 @@
-// SPA mode - no server entry needed
+import { type EntryContext } from "react-router";
+
+export default function handleRequest(
+  request: Request,
+  responseStatusCode: number,
+  responseHeaders: Headers,
+  remixContext: EntryContext
+) {
+  responseHeaders.set("Content-Type", "text/html");
+  return new Response(
+    `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mystic Network</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>`,
+    {
+      status: responseStatusCode,
+      headers: responseHeaders,
+    }
+  );
+}
 

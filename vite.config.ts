@@ -8,9 +8,10 @@ export default defineConfig({
   plugins: [
     tailwindcss(), 
     reactRouter(), 
+    react(),
     tsconfigPaths()
   ],
   ssr: {
-    noExternal: ['styled-components'] // This helps with SSR for styled-components
+    noExternal: ['styled-components']
   }
 });
