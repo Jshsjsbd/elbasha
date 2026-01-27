@@ -8,6 +8,27 @@
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/assets/entry.client-CaCwco4n.js"></script>
+    <script>
+      (async () => {
+        try {
+          // Load the manifest to find the correct entry.client file
+          const manifest = await fetch('/.vite/manifest.json').then(r => r.json());
+          const entryFile = manifest['app/entry.client.tsx']?.file;
+          if (!entryFile) throw new Error('entry.client not found in manifest');
+          
+          // Dynamically load the entry.client script
+          const script = document.createElement('script');
+          script.type = 'module';
+          script.src = '/assets/' + entryFile;
+          script.onerror = () => {
+            document.body.innerHTML = '<div style="color: red; padding: 20px; font-family: monospace;">Failed to load application</div>';
+          };
+          document.body.appendChild(script);
+        } catch (err) {
+          console.error('Failed to bootstrap app:', err);
+          document.body.innerHTML = '<div style="color: red; padding: 20px; font-family: monospace;">Error: ' + err.message + '</div>';
+        }
+      })();
+    </script>
   </body>
 </html>
