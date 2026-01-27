@@ -34,7 +34,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     );
   } catch (err: any) {
     console.error('⚠️  Webhook signature verification failed:', err.message);
-    return res.status(400).send(Webhook Error: ${err.message});
+    return res.status(400).send(`Webhook Error: ${err.message}`);
   }
   // Handle the event
   if (event.type === 'checkout.session.completed') {
@@ -50,9 +50,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           paidAt: admin.firestore.FieldValue.serverTimestamp(),
           stripePaymentIntent: session.payment_intent,
         });
-        console.log(✅ Payment successful for purchase ${purchaseId});
+        console.log(`✅ Payment successful for purchase ${purchaseId}`);
       } catch (error) {
-        console.error(❌ Error updating purchase ${purchaseId}:, error);
+        console.error(`❌ Error updating purchase ${purchaseId}:`, error);
       }
     } else {
       console.warn('⚠️  No purchaseId in session metadata');
