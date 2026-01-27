@@ -1,8 +1,6 @@
 declare module './firebase' {
-  export interface FirebaseAdmin {
-    firestore(): any;
-    auth(): any;
-  }
-  const admin: FirebaseAdmin;
+  const admin: any;
   export default admin;
 }
+
+export {};

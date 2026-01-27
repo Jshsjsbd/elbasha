@@ -1,4 +1,4 @@
-import type { Route } from "react-router";
+import * as Route from "react-router";
 import { redirect } from "react-router";
 import { json } from "../utils/response";
 import { useState, useEffect } from "react";

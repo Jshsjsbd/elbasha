@@ -91,7 +91,7 @@ export default async function handler(
       let messageId: string | undefined;
 
       try {
-        messageId = await sendApplicationEmbed({
+        const result = await sendApplicationEmbed({
           id,
           type,
           discordId,
@@ -101,6 +101,7 @@ export default async function handler(
           minecraftUuid: validation.uuid,
           answers,
         });
+        messageId = result || undefined;
       } catch (botError) {
         console.error("Failed to send bot embed:", botError);
         // Continue without bot notification
@@ -109,7 +110,6 @@ export default async function handler(
       // Store application
       const application = {
         id,
-        type,
         discordId,
         discordUsername,
         avatarUrl,
