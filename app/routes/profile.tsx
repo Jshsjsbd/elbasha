@@ -1,5 +1,5 @@
 import type { Route } from "react-router";
-import { json } from "react-router";
+import { json } from "../utils/response";
 import { useState, useEffect } from "react";
 
 export default function ProfilePage() {

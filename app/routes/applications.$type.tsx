@@ -1,5 +1,6 @@
 import type { Route } from "react-router";
-import { json, redirect } from "react-router";
+import { redirect } from "react-router";
+import { json } from "../utils/response";
 import { useState, useEffect } from "react";
 import { getApplicationQuestions, APPLICATION_TYPES } from "../services/applications";
 import { validateMinecraftUsername } from "../services/minecraft";

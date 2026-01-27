@@ -83,7 +83,7 @@ export default async function handler(
       // Validate answers
       const answerValidation = validateApplicationAnswers(type, answers);
       if (!answerValidation.valid) {
-        return res.status(400).json({ error: answerValidation.error });
+        return res.status(400).json({ error: "Invalid answers", errors: answerValidation.errors });
       }
 
       // Create application
@@ -91,7 +91,7 @@ export default async function handler(
       let messageId: string | undefined;
 
       try {
-        const appResponse = await sendApplicationEmbed({
+        messageId = await sendApplicationEmbed({
           id,
           type,
           discordId,
@@ -101,8 +101,6 @@ export default async function handler(
           minecraftUuid: validation.uuid,
           answers,
         });
-
-        messageId = appResponse?.messageId;
       } catch (botError) {
         console.error("Failed to send bot embed:", botError);
         // Continue without bot notification
@@ -177,9 +175,8 @@ export default async function handler(
       try {
         await sendApplicationResultDM(
           application.discordId,
-          application.type,
           status,
-          notes
+          id
         );
       } catch (error) {
         console.error("Failed to send result DM:", error);
