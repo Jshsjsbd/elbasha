@@ -1,4 +1,4 @@
-import { json, type RequestHandler } from "react-router";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import {
   exchangeDiscordCode,
   getDiscordUser,
@@ -11,16 +11,19 @@ import {
  * POST /api/auth/discord-callback
  * Exchange Discord authorization code for session token
  */
-export const POST: RequestHandler = async ({ request }) => {
-  if (request.method !== "POST") {
-    return json({ error: "Method not allowed" }, { status: 405 });
+export default async function handler(
+  req: VercelRequest,
+  res: VercelResponse
+) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    const { code } = await request.json();
+    const { code } = req.body as { code?: string };
 
     if (!code) {
-      return json({ error: "Authorization code is required" }, { status: 400 });
+      return res.status(400).json({ error: "Authorization code is required" });
     }
 
     // Exchange code for access token
@@ -53,29 +56,25 @@ export const POST: RequestHandler = async ({ request }) => {
       email: discordUser.email,
     });
 
-    return json(
-      {
-        success: true,
-        token: sessionToken,
-        user: {
-          discordId: discordUser.id,
-          username: discordUser.username,
-          email: discordUser.email,
-          avatar: createAvatarUrl(discordUser),
-        },
-      },
-      {
-        status: 200,
-        headers: {
-          "Set-Cookie": `session=${sessionToken}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`,
-        },
-      }
+    res.setHeader(
+      "Set-Cookie",
+      `session=${sessionToken}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=3600`
     );
+
+    return res.status(200).json({
+      success: true,
+      token: sessionToken,
+      user: {
+        discordId: discordUser.id,
+        username: discordUser.username,
+        email: discordUser.email,
+        avatar: createAvatarUrl(discordUser),
+      },
+    });
   } catch (error) {
     console.error("Auth callback error:", error);
-    return json(
-      { error: "Failed to authenticate with Discord" },
-      { status: 500 }
-    );
+    return res.status(500).json({
+      error: "Failed to authenticate with Discord",
+    });
   }
-};
+}

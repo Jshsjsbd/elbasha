@@ -132,7 +132,10 @@ export function getDiscordAvatarUrl(
  * Create JWT session token
  */
 export function createSessionToken(user: SessionUser): string {
-  const secret = process.env.JWT_SECRET;
+  const secret = process.env.JWT_SECRET || "default-secret-change-me";
+  if (!secret) {
+    throw new Error("JWT_SECRET is not configured");
+  }
   const expiresIn = parseInt(process.env.JWT_EXPIRY || "3600000");
 
   const token = jwt.sign(
@@ -143,7 +146,7 @@ export function createSessionToken(user: SessionUser): string {
       avatar: user.avatar,
       email: user.email,
     },
-    secret,
+    secret as string,
     {
       expiresIn: Math.floor(expiresIn / 1000), // Convert to seconds
     }
@@ -157,8 +160,11 @@ export function createSessionToken(user: SessionUser): string {
  */
 export function verifySessionToken(token: string): SessionUser | null {
   try {
-    const secret = process.env.JWT_SECRET;
-    const decoded = jwt.verify(token, secret) as SessionUser;
+    const secret = process.env.JWT_SECRET || "default-secret-change-me";
+    if (!secret) {
+      return null;
+    }
+    const decoded = jwt.verify(token, secret as string) as SessionUser;
     return decoded;
   } catch {
     return null;
