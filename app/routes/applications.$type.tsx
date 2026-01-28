@@ -1,5 +1,4 @@
-import * as Route from "react-router";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import { json } from "../utils/response";
 import { useState, useEffect } from "react";
 import { getApplicationQuestions, APPLICATION_TYPES } from "../services/applications";

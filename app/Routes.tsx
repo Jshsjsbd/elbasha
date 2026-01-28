@@ -1,4 +1,4 @@
-import { Routes as RRRoutes, Route } from "react-router";
+import { Routes as RRRoutes, Route } from "react-router-dom";
 import Home from "./routes/home";
 import Store from "./routes/store";
 import Success from "./routes/success";

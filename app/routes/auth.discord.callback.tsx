@@ -1,6 +1,5 @@
-import * as Route from "react-router";
 import { useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router";
+import { useSearchParams, useNavigate } from "react-router-dom";
 
 export default function DiscordCallbackPage() {
   const [searchParams] = useSearchParams();

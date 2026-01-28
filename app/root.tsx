@@ -1,11 +1,7 @@
-import {
-  isRouteErrorResponse,
-  Link,
-} from "react-router";
+import { isRouteErrorResponse, Link, useLocation } from "react-router-dom";
 import "./app.css";
 import Loader from "./components/loader";
 import React, { useEffect } from "react";
-import { useLocation } from "react-router";
 import { NavigationProvider } from "./components/MobileNav";
 import ThemeToggle from "./components/ThemeToggle";
 import SecurityMiddleware from "./components/SecurityMiddleware";

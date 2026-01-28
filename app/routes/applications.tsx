@@ -1,4 +1,3 @@
-import * as Route from "react-router";
 import { useState, useEffect } from "react";
 import { APPLICATION_TYPES } from "../services/applications";
 

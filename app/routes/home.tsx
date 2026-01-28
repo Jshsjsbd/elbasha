@@ -1,4 +1,4 @@
-import * as Route from "react-router";
+// removed unused react-router import; using react-router-dom hooks/components where needed
 import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
