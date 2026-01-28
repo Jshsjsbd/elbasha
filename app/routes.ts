@@ -5,7 +5,7 @@ export default [
   index("routes/home.tsx"),
   
   // Main routes
-  route("home", "routes/home.tsx"),
+//   route("home", "routes/home.tsx"),
   route("profile", "routes/profile.tsx"),
   route("store", "routes/store.tsx"),
   route("success", "routes/success.tsx"),
