@@ -1,4 +1,5 @@
-import { isRouteErrorResponse, Link, useLocation } from "react-router-dom";
+import { isRouteErrorResponse, Link, useLocation, useRouteError } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import "./app.css";
 import Loader from "./components/loader";
 import React, { useEffect } from "react";
@@ -35,14 +36,16 @@ export default function App() {
     <SecurityMiddleware>
       <NavigationProvider>
         {showLoader && <Loader />}
-        {!showLoader && <AppRoutes />}
+        {!showLoader && <Outlet />}
         <ThemeToggle className="z-1000000"/>
       </NavigationProvider>
     </SecurityMiddleware>
   );
 }
 
-export function ErrorBoundary({ error }: { error: any }) {
+export function ErrorBoundary() {
+  const error = useRouteError();
+
   let message = "Oops!";
   let details = "An unexpected error occurred.";
   let stack: string | undefined;
@@ -53,7 +56,7 @@ export function ErrorBoundary({ error }: { error: any }) {
       error.status === 404
         ? "Looks like you've ventured into uncharted territory!"
         : error.statusText || details;
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
+  } else if (import.meta.env.DEV && error instanceof Error) {
     details = error.message;
     stack = error.stack;
   }
@@ -65,22 +68,21 @@ export function ErrorBoundary({ error }: { error: any }) {
           {message}
         </h1>
         <p className="text-2xl text-[#f5f5dc] mb-8 max-w-md mx-auto">{details}</p>
-        {typeof error === "object" && error !== null && "status" in error && (error as any).status === 404 && (
+
+        {isRouteErrorResponse(error) && error.status === 404 && (
           <div className="space-y-4 mb-8">
             <p className="text-[#e6e6cc]">Don't worry, let's get you back on track!</p>
-            <div className="relative">
-              <div className="absolute inset-0 rounded-lg blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
-              <Link to='/' className="relative block">
-                <button className="cursor-pointer px-8 py-4 bg-[#000000]/80 backdrop-blur-sm text-[#d4a35d] rounded-lg font-semibold transform hover:scale-105 transition-all duration-200 hover:bg-[#d4a35d]/20 border border-[#d4a35d]">
-                  Return to Home Page →
-                </button>
-              </Link>
-            </div>
+            <Link to="/">
+              <button className="cursor-pointer px-8 py-4 bg-[#000000]/80 text-[#d4a35d] rounded-lg border border-[#d4a35d] hover:scale-105 transition">
+                Return to Home Page →
+              </button>
+            </Link>
           </div>
         )}
       </div>
+
       {stack && (
-        <pre className="mt-8 p-4 bg-[#000000]/80 backdrop-blur-sm text-[#f5f5dc] rounded-lg overflow-x-auto max-w-full border border-[#d4a35d]/30">
+        <pre className="mt-8 p-4 bg-[#000000]/80 text-[#f5f5dc] rounded-lg overflow-x-auto max-w-full border border-[#d4a35d]/30">
           <code>{stack}</code>
         </pre>
       )}

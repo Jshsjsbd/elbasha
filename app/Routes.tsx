@@ -1,4 +1,6 @@
-import { Routes as RRRoutes, Route } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
+import Root, { ErrorBoundary } from "./root";
+
 import Home from "./routes/home";
 import Store from "./routes/store";
 import Success from "./routes/success";
@@ -8,17 +10,20 @@ import ApplicationsType from "./routes/applications.$type";
 import AuthDiscordCallback from "./routes/auth.discord.callback";
 import Profile from "./routes/profile";
 
-export default function Routes() {
-  return (
-    <RRRoutes>
-      <Route index element={<Home />} />
-      <Route path="store" element={<Store />} />
-      <Route path="success" element={<Success />} />
-      <Route path="cancel" element={<Cancel />} />
-      <Route path="applications" element={<Applications />} />
-      <Route path="applications/:type" element={<ApplicationsType />} />
-      <Route path="auth/discord/callback" element={<AuthDiscordCallback />} />
-      <Route path="profile" element={<Profile />} />
-    </RRRoutes>
-  );
-}
+export const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Root />,
+    errorElement: <ErrorBoundary />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: "store", element: <Store /> },
+      { path: "success", element: <Success /> },
+      { path: "cancel", element: <Cancel /> },
+      { path: "applications", element: <Applications /> },
+      { path: "applications/:type", element: <ApplicationsType /> },
+      { path: "auth/discord/callback", element: <AuthDiscordCallback /> },
+      { path: "profile", element: <Profile /> },
+    ],
+  },
+]);
