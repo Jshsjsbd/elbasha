@@ -15,7 +15,6 @@ import ThemeToggle from "./components/ThemeToggle";
 import SecurityMiddleware from "./components/SecurityMiddleware";
 import Loader from "./components/loader";
 
-// This Layout component wraps EVERYTHING
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -26,12 +25,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <SecurityMiddleware>
-          <NavigationProvider>
-            {children}
-            <ThemeToggle className="z-1000000" />
-          </NavigationProvider>
-        </SecurityMiddleware>
+        {children}
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -39,7 +33,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Root component - simplified
 export default function Root() {
   const [showLoader, setShowLoader] = React.useState(true);
 
@@ -63,10 +56,13 @@ export default function Root() {
   }, []);
 
   return (
-    <>
-      {showLoader && <Loader />}
-      {!showLoader && <Outlet />}
-    </>
+    <SecurityMiddleware>
+      <NavigationProvider>
+        {showLoader && <Loader />}
+        {!showLoader && <Outlet />}
+        <ThemeToggle className="z-1000000" />
+      </NavigationProvider>
+    </SecurityMiddleware>
   );
 }
 
