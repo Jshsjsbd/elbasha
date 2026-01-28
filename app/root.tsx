@@ -1,4 +1,12 @@
-import { Outlet, isRouteErrorResponse, useRouteError } from "react-router";
+import {
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  isRouteErrorResponse,
+  useRouteError,
+} from "react-router";
 import "./app.css";
 import "./i18n";
 import React, { useEffect } from "react";
@@ -6,6 +14,24 @@ import { NavigationProvider } from "./components/MobileNav";
 import ThemeToggle from "./components/ThemeToggle";
 import SecurityMiddleware from "./components/SecurityMiddleware";
 import Loader from "./components/loader";
+
+export function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        {children}
+        <ScrollRestoration />
+        <Scripts />
+      </body>
+    </html>
+  );
+}
 
 export default function Root() {
   const [showLoader, setShowLoader] = React.useState(true);

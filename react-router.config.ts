@@ -1,10 +1,7 @@
 import type { Config } from "@react-router/dev/config";
 
 export default {
-  ssr: false,
+  ssr: true, // Changed from false to true
   basename: "/",
   buildDirectory: "build",
-  future: {
-    unstable_singleFetch: true,
-  },
 } satisfies Config;
