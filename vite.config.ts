@@ -9,6 +9,9 @@ export default defineConfig({
     react(),
     tsconfigPaths()
   ],
+  build: {
+    outDir: 'build/client', // يبقى نفس اللي Vercel متوقعه
+  },
   ssr: {
     noExternal: ['styled-components']
   }
