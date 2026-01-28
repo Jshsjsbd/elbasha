@@ -10,7 +10,15 @@ export default defineConfig({
     tsconfigPaths()
   ],
   build: {
-    outDir: 'build/client', // يبقى نفس اللي Vercel متوقعه
+    outDir: 'build/client',
+    manifest: true,
+    rollupOptions: {
+      output: {
+        entryFileNames: `assets/[name]-[hash].js`,
+        chunkFileNames: `assets/[name]-[hash].js`,
+        assetFileNames: `assets/[name]-[hash].[ext]`
+      }
+    }
   },
   ssr: {
     noExternal: ['styled-components']

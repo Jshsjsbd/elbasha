@@ -8,6 +8,14 @@
       "destination": "/api/$1"
     },
     {
+      "source": "/.vite/(.*)",
+      "destination": "/.vite/$1"
+    },
+    {
+      "source": "/assets/(.*)",
+      "destination": "/assets/$1"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
