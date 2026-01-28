@@ -2,15 +2,14 @@
   "buildCommand": "npm run build",
   "outputDirectory": "build/client",
   "installCommand": "npm install --legacy-peer-deps",
-  "framework": null,
-  "routes": [
+  "rewrites": [
     {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
+      "source": "/api/:path*",
+      "destination": "/api/:path*"
     },
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [
