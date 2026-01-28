@@ -4,5 +4,7 @@ export default {
   ssr: false,
   basename: "/",
   buildDirectory: "build",
-  prerender: false, // Add this line
+  future: {
+    unstable_singleFetch: true,
+  },
 } satisfies Config;
