@@ -1,5 +1,4 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse, useRouteError } from "react-router";
-import type { Route } from "./+types/root";
 import "./app.css";
 import "./i18n";
 import React, { useEffect } from "react";
@@ -36,7 +35,7 @@ export default function Root() {
   }, []);
 
   useEffect(() => {
-    if (window.location.pathname === "/banned") return;
+    if (typeof window !== 'undefined' && window.location.pathname === "/banned") return;
     fetch("/api/ip-check")
       .then(res => {
         console.log("🎯 ip-check status:", res.status);
@@ -87,4 +86,3 @@ export function ErrorBoundary() {
     </main>
   );
 }
-
