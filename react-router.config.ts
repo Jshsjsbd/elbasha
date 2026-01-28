@@ -1,9 +1,7 @@
 import type { Config } from "@react-router/dev/config";
-import { vercelPreset } from "@react-router/dev/presets/vercel";
 
 export default {
-  presets: [vercelPreset()],
-  ssr: true,
+  ssr: false,  // Changed to false for static client-side rendering
   basename: "/",
   buildDirectory: "build",
 } satisfies Config;
