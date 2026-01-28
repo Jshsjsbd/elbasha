@@ -1,27 +1,42 @@
-import { isRouteErrorResponse, Link, useLocation, useRouteError } from "react-router-dom";
-import { Outlet } from "react-router-dom";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse, useRouteError } from "react-router";
+import type { Route } from "./+types/root";
 import "./app.css";
-import Loader from "./components/loader";
+import "./i18n";
 import React, { useEffect } from "react";
 import { NavigationProvider } from "./components/MobileNav";
 import ThemeToggle from "./components/ThemeToggle";
 import SecurityMiddleware from "./components/SecurityMiddleware";
-import SecurityAudit from "./components/SecurityAudit";
-import AppRoutes from "./AppRoutes";
-import "./i18n";
+import Loader from "./components/loader";
 
-export default function App() {
-  const location = useLocation();
+export function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        {children}
+        <ScrollRestoration />
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+
+export default function Root() {
   const [showLoader, setShowLoader] = React.useState(true);
 
   useEffect(() => {
     setShowLoader(true);
     const timer = setTimeout(() => setShowLoader(false), 2000);
     return () => clearTimeout(timer);
-  }, [location.pathname]);
+  }, []);
 
   useEffect(() => {
-    if (location.pathname === "/banned") return;
+    if (window.location.pathname === "/banned") return;
     fetch("/api/ip-check")
       .then(res => {
         console.log("🎯 ip-check status:", res.status);
@@ -30,7 +45,7 @@ export default function App() {
         }
       })
       .catch((err) => console.error("IP check failed", err));
-  }, [location.pathname]);
+  }, []);
 
   return (
     <SecurityMiddleware>
@@ -43,9 +58,8 @@ export default function App() {
   );
 }
 
-// في root.tsx
-export function ErrorBoundary({ error }: { error?: any }) { 
-  // خلي error اختياري بدل ما يكون required
+export function ErrorBoundary() {
+  const error = useRouteError();
   let message = "Oops!";
   let details = "An unexpected error occurred.";
   let stack: string | undefined;
@@ -54,16 +68,23 @@ export function ErrorBoundary({ error }: { error?: any }) {
     message = error.status === 404 ? "404" : "Error";
     details =
       error.status === 404
-        ? "Looks like you've ventured into uncharted territory!"
+        ? "The page you're looking for doesn't exist."
         : error.statusText || details;
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
+  } else if (error instanceof Error) {
     details = error.message;
     stack = error.stack;
   }
 
   return (
     <main className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-[#d4a35d] to-[#000000] p-4">
-      {/* ... باقي الكود */}
+      <h1 className="text-4xl font-bold text-white mb-4">{message}</h1>
+      <p className="text-xl text-white/80 mb-8">{details}</p>
+      {stack && (
+        <pre className="bg-black/50 text-white p-4 rounded max-w-2xl overflow-auto">
+          {stack}
+        </pre>
+      )}
     </main>
   );
 }
+

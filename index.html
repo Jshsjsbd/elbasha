@@ -9,48 +9,7 @@
   <body>
     <div id="root"></div>
 
-    <script type="module">
-      (async () => {
-        try {
-          // Load the manifest from root (بعد ما Vercel يحط build/client كـ root)
-          console.log('Loading manifest from /manifest.json');
-          const manifestRes = await fetch('/.vite/manifest.json');
-          if (!manifestRes.ok) {
-            throw new Error(`Failed to fetch manifest: ${manifestRes.status} ${manifestRes.statusText}`);
-          }
-
-          const manifest = await manifestRes.json();
-          console.log('Manifest loaded:', manifest);
-
-          const entryData = manifest['app/entry.client.tsx'];
-          if (!entryData) {
-            throw new Error('entry.client not found in manifest. Keys: ' + Object.keys(manifest).join(', '));
-          }
-
-          const entryFile = entryData.file;
-          console.log('Found entry.client file:', entryFile);
-
-          // Load the entry.client script dynamically
-          const script = document.createElement('script');
-          script.type = 'module';
-          script.src = '/' + entryFile; // path جديد متوافق مع assets
-          
-          script.onerror = (err) => {
-            console.error('Script load error:', err);
-            document.body.innerHTML = '<div style="color: red; padding: 20px; font-family: monospace; white-space: pre-wrap;">Failed to load application<br>' + (err?.message || 'Unknown error') + '</div>';
-          };
-
-          window.addEventListener('error', (err) => {
-            console.error('Global error:', err);
-          });
-
-          console.log('Loading script:', script.src);
-          document.body.appendChild(script);
-        } catch (err) {
-          console.error('Failed to bootstrap app:', err);
-          document.body.innerHTML = '<div style="color: red; padding: 20px; font-family: monospace; white-space: pre-wrap;">Error loading application:<br>' + err.message + '</div>';
-        }
-      })();
-    </script>
+    <!-- نستخدم الـ bundle النهائي مباشرة -->
+    <script type="module" src="/assets/index-B584BWZz.js"></script>
   </body>
 </html>

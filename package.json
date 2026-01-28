@@ -3,10 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "npm run typecheck && node node_modules/vite/bin/vite.js build",
-    "dev": "vite",
-    "start": "node dist/server/index.js",
-    "typecheck": "node node_modules/typescript/bin/tsc --noEmit",
+    "build": "react-router build",
+    "dev": "react-router dev",
+    "start": "react-router-serve ./build/server/index.js",
+    "typecheck": "tsc --noEmit",
     "security:audit": "npm audit --audit-level=critical || true",
     "security:fix": "npm audit fix",
     "security:check": "npm run typecheck"
