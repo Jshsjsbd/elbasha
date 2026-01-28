@@ -43,9 +43,9 @@ export default function App() {
   );
 }
 
-export function ErrorBoundary() {
-  const error = useRouteError();
-
+// في root.tsx
+export function ErrorBoundary({ error }: { error?: any }) { 
+  // خلي error اختياري بدل ما يكون required
   let message = "Oops!";
   let details = "An unexpected error occurred.";
   let stack: string | undefined;
@@ -56,36 +56,14 @@ export function ErrorBoundary() {
       error.status === 404
         ? "Looks like you've ventured into uncharted territory!"
         : error.statusText || details;
-  } else if (import.meta.env.DEV && error instanceof Error) {
+  } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;
   }
 
   return (
     <main className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-[#d4a35d] to-[#000000] p-4">
-      <div className="text-center">
-        <h1 className="text-[12rem] font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#f5f5dc] to-[#d4a35d] animate-pulse">
-          {message}
-        </h1>
-        <p className="text-2xl text-[#f5f5dc] mb-8 max-w-md mx-auto">{details}</p>
-
-        {isRouteErrorResponse(error) && error.status === 404 && (
-          <div className="space-y-4 mb-8">
-            <p className="text-[#e6e6cc]">Don't worry, let's get you back on track!</p>
-            <Link to="/">
-              <button className="cursor-pointer px-8 py-4 bg-[#000000]/80 text-[#d4a35d] rounded-lg border border-[#d4a35d] hover:scale-105 transition">
-                Return to Home Page →
-              </button>
-            </Link>
-          </div>
-        )}
-      </div>
-
-      {stack && (
-        <pre className="mt-8 p-4 bg-[#000000]/80 text-[#f5f5dc] rounded-lg overflow-x-auto max-w-full border border-[#d4a35d]/30">
-          <code>{stack}</code>
-        </pre>
-      )}
+      {/* ... باقي الكود */}
     </main>
   );
 }

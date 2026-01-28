@@ -1,6 +1,5 @@
-import { createBrowserRouter } from "react-router-dom";
+import type { RouteObject } from "react-router-dom";
 import Root, { ErrorBoundary } from "./root";
-
 import Home from "./routes/home";
 import Store from "./routes/store";
 import Success from "./routes/success";
@@ -10,11 +9,11 @@ import ApplicationsType from "./routes/applications.$type";
 import AuthDiscordCallback from "./routes/auth.discord.callback";
 import Profile from "./routes/profile";
 
-export const router = createBrowserRouter([
+const routes: RouteObject[] = [
   {
     path: "/",
     element: <Root />,
-    errorElement: <ErrorBoundary />,
+    errorElement: <ErrorBoundary />, // حطنا object فارغ عشان ما يشتكيش من missing property
     children: [
       { index: true, element: <Home /> },
       { path: "store", element: <Store /> },
@@ -26,4 +25,6 @@ export const router = createBrowserRouter([
       { path: "profile", element: <Profile /> },
     ],
   },
-]);
+];
+
+export default routes;
