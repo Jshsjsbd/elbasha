@@ -42,18 +42,19 @@ export default function Root() {
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.location.pathname === "/banned")
-      return;
-    fetch("/api/ip-check")
-      .then((res) => {
-        console.log("🎯 ip-check status:", res.status);
-        if (res.status === 403) {
-          window.location.href = "/banned";
-        }
-      })
-      .catch((err) => console.error("IP check failed", err));
-  }, []);
+  // Commented out IP check until we set up API routes properly
+  // useEffect(() => {
+  //   if (typeof window !== "undefined" && window.location.pathname === "/banned")
+  //     return;
+  //   fetch("/api/ip-check")
+  //     .then((res) => {
+  //       console.log("🎯 ip-check status:", res.status);
+  //       if (res.status === 403) {
+  //         window.location.href = "/banned";
+  //       }
+  //     })
+  //     .catch((err) => console.error("IP check failed", err));
+  // }, []);
 
   return (
     <SecurityMiddleware>
