@@ -1,4 +1,12 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse, useRouteError } from "react-router";
+import {
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  isRouteErrorResponse,
+  useRouteError,
+} from "react-router";
 import "./app.css";
 import "./i18n";
 import React, { useEffect } from "react";
@@ -7,6 +15,7 @@ import ThemeToggle from "./components/ThemeToggle";
 import SecurityMiddleware from "./components/SecurityMiddleware";
 import Loader from "./components/loader";
 
+// This Layout component wraps EVERYTHING
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -17,7 +26,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
+        <SecurityMiddleware>
+          <NavigationProvider>
+            {children}
+            <ThemeToggle className="z-1000000" />
+          </NavigationProvider>
+        </SecurityMiddleware>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -25,6 +39,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+// Root component - simplified
 export default function Root() {
   const [showLoader, setShowLoader] = React.useState(true);
 
@@ -35,9 +50,10 @@ export default function Root() {
   }, []);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.location.pathname === "/banned") return;
+    if (typeof window !== "undefined" && window.location.pathname === "/banned")
+      return;
     fetch("/api/ip-check")
-      .then(res => {
+      .then((res) => {
         console.log("🎯 ip-check status:", res.status);
         if (res.status === 403) {
           window.location.href = "/banned";
@@ -47,13 +63,10 @@ export default function Root() {
   }, []);
 
   return (
-    <SecurityMiddleware>
-      <NavigationProvider>
-        {showLoader && <Loader />}
-        {!showLoader && <Outlet />}
-        <ThemeToggle className="z-1000000"/>
-      </NavigationProvider>
-    </SecurityMiddleware>
+    <>
+      {showLoader && <Loader />}
+      {!showLoader && <Outlet />}
+    </>
   );
 }
 
