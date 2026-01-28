@@ -4,4 +4,5 @@ export default {
   ssr: false,
   basename: "/",
   buildDirectory: "build",
+  prerender: false, // Add this line
 } satisfies Config;
