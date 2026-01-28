@@ -6,7 +6,15 @@ import tsconfigPaths from "vite-tsconfig-paths";
 export default defineConfig({
   plugins: [
     tailwindcss(),
-    reactRouter(), // ← This is the key change!
+    reactRouter(),
     tsconfigPaths()
   ],
+  ssr: {
+    noExternal: ['styled-components', 'ldrs'],
+  },
+  resolve: {
+    alias: {
+      'styled-components': 'styled-components/dist/styled-components.browser.esm.js'
+    }
+  }
 });
