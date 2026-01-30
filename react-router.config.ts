@@ -2,6 +2,6 @@
 
 export default {
   ssr: false,
-  basename: "/",
-  buildDirectory: "build"
+  basename: "/elbasha",  // Changed: GitHub Pages serves from /elbasha/
+  buildDirectory: "build",
 } satisfies Config;
