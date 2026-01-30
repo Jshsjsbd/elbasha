@@ -2,6 +2,7 @@
 
 export default {
   ssr: false,
-  basename: "/elbasha",  // Changed: GitHub Pages serves from /elbasha/
+  basename: "/elbasha",
   buildDirectory: "build",
+  prerender: ["/"],
 } satisfies Config;
