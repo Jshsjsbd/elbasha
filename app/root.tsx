@@ -15,24 +15,7 @@ import ThemeToggle from "./components/ThemeToggle";
 import SecurityMiddleware from "./components/SecurityMiddleware";
 import Loader from "./components/loader";
 
-export function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
-      </body>
-    </html>
-  );
-}
-
+// Remove the Layout component export for SPA mode
 export default function Root() {
   const [showLoader, setShowLoader] = React.useState(true);
 
@@ -42,28 +25,26 @@ export default function Root() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Commented out IP check until we set up API routes properly
-  // useEffect(() => {
-  //   if (typeof window !== "undefined" && window.location.pathname === "/banned")
-  //     return;
-  //   fetch("/api/ip-check")
-  //     .then((res) => {
-  //       console.log("🎯 ip-check status:", res.status);
-  //       if (res.status === 403) {
-  //         window.location.href = "/banned";
-  //       }
-  //     })
-  //     .catch((err) => console.error("IP check failed", err));
-  // }, []);
-
   return (
-    <SecurityMiddleware>
-      <NavigationProvider>
-        {showLoader && <Loader />}
-        {!showLoader && <Outlet />}
-        <ThemeToggle className="z-1000000" />
-      </NavigationProvider>
-    </SecurityMiddleware>
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <SecurityMiddleware>
+          <NavigationProvider>
+            {showLoader && <Loader />}
+            {!showLoader && <Outlet />}
+            <ThemeToggle className="z-1000000" />
+          </NavigationProvider>
+        </SecurityMiddleware>
+        <ScrollRestoration />
+        <Scripts />
+      </body>
+    </html>
   );
 }
 
@@ -85,14 +66,25 @@ export function ErrorBoundary() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-[#d4a35d] to-[#000000] p-4">
-      <h1 className="text-4xl font-bold text-white mb-4">{message}</h1>
-      <p className="text-xl text-white/80 mb-8">{details}</p>
-      {stack && (
-        <pre className="bg-black/50 text-white p-4 rounded max-w-2xl overflow-auto">
-          {stack}
-        </pre>
-      )}
-    </main>
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        <main className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-[#d4a35d] to-[#000000] p-4">
+          <h1 className="text-4xl font-bold text-white mb-4">{message}</h1>
+          <p className="text-xl text-white/80 mb-8">{details}</p>
+          {stack && (
+            <pre className="bg-black/50 text-white p-4 rounded max-w-2xl overflow-auto">
+              {stack}
+            </pre>
+          )}
+        </main>
+        <Scripts />
+      </body>
+    </html>
   );
 }
