@@ -13,5 +13,4 @@ export default defineConfig({
   ssr: {
     noExternal: ['styled-components', 'ldrs'],
   },
-  // REMOVED the broken resolve.alias for styled-components
-}); 
+});

@@ -1,7 +1,7 @@
 ﻿import type { Config } from "@react-router/dev/config";
 
 export default {
-  ssr: true,  // Changed to true
+  ssr: true,
   basename: "/elbasha",
   buildDirectory: "build",
 } satisfies Config;
