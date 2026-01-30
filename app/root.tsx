@@ -15,7 +15,24 @@ import ThemeToggle from "./components/ThemeToggle";
 import SecurityMiddleware from "./components/SecurityMiddleware";
 import Loader from "./components/loader";
 
-// Remove the Layout component export for SPA mode
+export function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta />
+        <Links />
+      </head>
+      <body>
+        {children}
+        <ScrollRestoration />
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+
 export default function Root() {
   const [showLoader, setShowLoader] = React.useState(true);
 
@@ -26,25 +43,13 @@ export default function Root() {
   }, []);
 
   return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <SecurityMiddleware>
-          <NavigationProvider>
-            {showLoader && <Loader />}
-            {!showLoader && <Outlet />}
-            <ThemeToggle className="z-1000000" />
-          </NavigationProvider>
-        </SecurityMiddleware>
-        <ScrollRestoration />
-        <Scripts />
-      </body>
-    </html>
+    <SecurityMiddleware>
+      <NavigationProvider>
+        {showLoader && <Loader />}
+        {!showLoader && <Outlet />}
+        <ThemeToggle className="z-1000000" />
+      </NavigationProvider>
+    </SecurityMiddleware>
   );
 }
 
@@ -66,25 +71,14 @@ export function ErrorBoundary() {
   }
 
   return (
-    <html lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta />
-        <Links />
-      </head>
-      <body>
-        <main className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-[#d4a35d] to-[#000000] p-4">
-          <h1 className="text-4xl font-bold text-white mb-4">{message}</h1>
-          <p className="text-xl text-white/80 mb-8">{details}</p>
-          {stack && (
-            <pre className="bg-black/50 text-white p-4 rounded max-w-2xl overflow-auto">
-              {stack}
-            </pre>
-          )}
-        </main>
-        <Scripts />
-      </body>
-    </html>
+    <main className="min-h-screen flex flex-col justify-center items-center bg-gradient-to-br from-[#d4a35d] to-[#000000] p-4">
+      <h1 className="text-4xl font-bold text-white mb-4">{message}</h1>
+      <p className="text-xl text-white/80 mb-8">{details}</p>
+      {stack && (
+        <pre className="bg-black/50 text-white p-4 rounded max-w-2xl overflow-auto">
+          {stack}
+        </pre>
+      )}
+    </main>
   );
 }
