@@ -1,7 +1,7 @@
-import type { Config } from "@react-router/dev/config";
+﻿import type { Config } from "@react-router/dev/config";
 
 export default {
-  ssr: false,  // Changed to false for static client-side rendering
+  ssr: false,
   basename: "/",
-  buildDirectory: "build",
+  buildDirectory: "build"
 } satisfies Config;
