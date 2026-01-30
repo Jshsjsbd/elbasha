@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  base: "/elbasha/",  // Added: GitHub Pages base path
+  base: "/elbasha/",
   plugins: [
     tailwindcss(),
     reactRouter(),
@@ -13,9 +13,5 @@ export default defineConfig({
   ssr: {
     noExternal: ['styled-components', 'ldrs'],
   },
-  resolve: {
-    alias: {
-      'styled-components': 'styled-components/dist/styled-components.browser.esm.js'
-    }
-  }
-});
+  // REMOVED the broken resolve.alias for styled-components
+}); 
